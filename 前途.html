@@ -1,0 +1,3292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>前途 QIANTU · INTJ 行动框架</title>
+  <style>
+/* 前途 QIANTU — 样式表（深色、克制、信息密度优先） */
+
+:root {
+  --bg: #0b0f14;
+  --surface: #121a23;
+  --surface-2: #17212c;
+  --surface-3: #0d141c;
+  --border: #24303d;
+  --border-strong: #31404f;
+  --text: #e6edf3;
+  --muted: #8b98a8;
+  --faint: #5f6c7b;
+  --accent: #5b9dff;
+  --accent-strong: #7ab1ff;
+  --accent-weak: rgba(91, 157, 255, 0.13);
+  --green: #3fb950;
+  --green-weak: rgba(63, 185, 80, 0.12);
+  --yellow: #d8a028;
+  --yellow-weak: rgba(216, 160, 40, 0.13);
+  --red: #f0564a;
+  --red-weak: rgba(240, 86, 74, 0.12);
+  --radius: 12px;
+  --shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", Roboto, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html, body { height: 100%; }
+
+body {
+  margin: 0;
+  background: radial-gradient(1200px 600px at 18% -10%, rgba(91, 157, 255, 0.08), transparent 60%), var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-strong); }
+
+h1, h2, h3, p { margin: 0; }
+
+.num, .tabular { font-variant-numeric: tabular-nums; }
+
+/* ------------------------------------------------------------------ 布局 */
+.app { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 228px;
+  flex: 0 0 228px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 14px 18px;
+  border-right: 1px solid var(--border);
+  background: linear-gradient(180deg, #0e151d 0%, #0a0f14 100%);
+}
+
+.brand { display: flex; align-items: center; gap: 11px; padding: 0 8px 20px; }
+.brand-mark {
+  width: 34px; height: 34px; border-radius: 10px;
+  display: grid; place-items: center;
+  background: linear-gradient(135deg, #2a6ad4, #5b9dff);
+  color: #06101d; font-size: 16px; font-weight: 700;
+}
+.brand-name { font-size: 16px; font-weight: 650; letter-spacing: 0.6px; }
+.brand-sub { font-size: 10.5px; color: var(--faint); letter-spacing: 1.1px; text-transform: uppercase; }
+
+.nav { display: flex; flex-direction: column; gap: 3px; }
+.nav a {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px; border-radius: 9px;
+  color: var(--muted); font-size: 13.5px;
+  border: 1px solid transparent;
+}
+.nav a:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
+.nav a.active {
+  color: var(--accent);
+  background: var(--accent-weak);
+  border-color: rgba(91, 157, 255, 0.22);
+}
+.nav a .nav-glyph { width: 16px; text-align: center; font-size: 12px; color: var(--faint); }
+.nav a.active .nav-glyph { color: var(--accent); }
+
+.side-foot { margin-top: auto; padding: 0 8px; display: flex; flex-direction: column; gap: 10px; }
+.side-foot a { color: var(--muted); font-size: 13px; display: block; padding: 6px 4px; }
+.side-foot a:hover { color: var(--text); }
+.side-ver { font-size: 11px; color: var(--faint); }
+.demo-tag {
+  display: inline-block; padding: 2px 8px; border-radius: 999px;
+  border: 1px solid rgba(216, 160, 40, 0.4); color: var(--yellow);
+  background: var(--yellow-weak); font-size: 11px;
+}
+
+.main { flex: 1; min-width: 0; padding: 28px 34px 70px; }
+.page { max-width: 1080px; margin: 0 auto; }
+
+.page-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 18px; margin-bottom: 22px; flex-wrap: wrap; }
+.page-head h1 { font-size: 22px; font-weight: 650; letter-spacing: 0.2px; }
+.page-head .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.page-head .head-actions { display: flex; gap: 10px; align-items: center; }
+
+/* ------------------------------------------------------------------ 卡片 */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+.card-title {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 14px;
+}
+.card-title h2 { font-size: 14px; font-weight: 600; letter-spacing: 0.2px; }
+.card-title .card-actions { display: flex; gap: 8px; align-items: center; }
+
+.stack > * + * { margin-top: 16px; }
+.section-gap { margin-top: 18px; }
+
+.grid { display: grid; gap: 16px; }
+.grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+.stat-value { font-size: 25px; font-weight: 650; letter-spacing: 0.3px; font-variant-numeric: tabular-nums; }
+.stat-sub { font-size: 12.5px; color: var(--muted); margin-top: 5px; }
+.stat-label { font-size: 12.5px; color: var(--muted); margin-bottom: 4px; }
+
+/* ------------------------------------------------------------------ 徽章 / 状态 */
+.badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 2px 9px; border-radius: 999px; font-size: 12px;
+  border: 1px solid transparent; white-space: nowrap; line-height: 1.7;
+}
+.badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex: none; }
+.tone-green { color: var(--green); background: var(--green-weak); border-color: rgba(63, 185, 80, 0.26); }
+.tone-yellow { color: var(--yellow); background: var(--yellow-weak); border-color: rgba(216, 160, 40, 0.28); }
+.tone-red { color: var(--red); background: var(--red-weak); border-color: rgba(240, 86, 74, 0.3); }
+.tone-accent { color: var(--accent); background: var(--accent-weak); border-color: rgba(91, 157, 255, 0.26); }
+.tone-muted { color: var(--muted); background: rgba(139, 152, 168, 0.1); border-color: rgba(139, 152, 168, 0.22); }
+
+/* ------------------------------------------------------------------ 按钮 */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 14px; border-radius: 9px;
+  border: 1px solid var(--border-strong); background: var(--surface-2);
+  color: var(--text); font-size: 13.5px; font-family: inherit;
+  cursor: pointer; text-decoration: none; white-space: nowrap;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+}
+.btn:hover { border-color: var(--accent); color: var(--text); }
+.btn-primary { background: var(--accent); border-color: var(--accent); color: #06131f; font-weight: 600; }
+.btn-primary:hover { background: var(--accent-strong); border-color: var(--accent-strong); color: #06131f; }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--muted); }
+.btn-ghost:hover { color: var(--text); background: rgba(255, 255, 255, 0.04); }
+.btn-danger { color: var(--red); border-color: rgba(240, 86, 74, 0.4); background: transparent; }
+.btn-danger:hover { background: var(--red-weak); border-color: rgba(240, 86, 74, 0.6); color: var(--red); }
+.btn-sm { padding: 4px 10px; font-size: 12.5px; border-radius: 8px; }
+.btn-xs { padding: 2px 8px; font-size: 12px; border-radius: 7px; }
+.btn:disabled, .btn[disabled] { opacity: 0.45; cursor: not-allowed; }
+.btn:disabled:hover { border-color: var(--border-strong); }
+
+/* ------------------------------------------------------------------ 表单 */
+.field { display: flex; flex-direction: column; gap: 6px; margin-bottom: 15px; }
+.field > label { font-size: 12.5px; color: var(--muted); }
+.field .req { color: var(--red); margin-left: 2px; }
+
+.input {
+  width: 100%;
+  background: #0a1017;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 9px;
+  padding: 9px 11px;
+  font-size: 13.5px;
+  font-family: inherit;
+  line-height: 1.4;
+  outline: none;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91, 157, 255, 0.12); }
+.input.invalid { border-color: var(--red); box-shadow: 0 0 0 3px rgba(240, 86, 74, 0.1); }
+input.input[type="number"] { font-variant-numeric: tabular-nums; }
+textarea.input { resize: vertical; min-height: 74px; }
+select.input { appearance: none; background-image: linear-gradient(45deg, transparent 50%, var(--muted) 50%), linear-gradient(135deg, var(--muted) 50%, transparent 50%); background-position: calc(100% - 16px) 50%, calc(100% - 11px) 50%; background-size: 5px 5px, 5px 5px; background-repeat: no-repeat; padding-right: 30px; }
+
+.hint { font-size: 12px; color: var(--faint); }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; }
+.form-grid .span-2 { grid-column: 1 / -1; }
+.form-grid .span-3 { grid-column: 1 / -1; }
+
+.calc {
+  display: flex; flex-wrap: wrap; gap: 8px 22px;
+  padding: 9px 13px; margin-bottom: 15px;
+  background: var(--surface-3); border: 1px dashed var(--border);
+  border-radius: 9px; font-size: 12.5px; color: var(--muted);
+}
+.calc b { color: var(--text); font-variant-numeric: tabular-nums; font-weight: 600; }
+.calc .warn { color: var(--yellow); }
+
+.radios { display: flex; gap: 8px; flex-wrap: wrap; }
+.radios label {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 7px 12px; border: 1px solid var(--border); border-radius: 9px;
+  cursor: pointer; font-size: 13px; color: var(--text);
+  background: #0c131b; user-select: none;
+}
+.radios label:hover { border-color: var(--border-strong); }
+.radios label:has(input:checked) { border-color: var(--accent); background: var(--accent-weak); }
+.radios input { accent-color: var(--accent); margin: 0; }
+
+.rows { display: flex; flex-direction: column; gap: 10px; }
+.row-line { display: grid; grid-template-columns: 1fr 90px 1fr auto; gap: 8px; align-items: center; }
+.row-line.debt { grid-template-columns: 120px 120px 110px 90px auto; }
+.row-line .input { padding: 7px 9px; font-size: 13px; }
+.row-line .rm {
+  width: 30px; height: 30px; border-radius: 8px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); cursor: pointer; font-size: 15px; line-height: 1;
+}
+.row-line .rm:hover { color: var(--red); border-color: rgba(240, 86, 74, 0.5); }
+
+.row-line.skill { grid-template-columns: 1fr 78px 1fr 92px auto; }
+
+.error-list .alert-title { font-weight: 600; margin-bottom: 4px; color: var(--text); }
+.error-list ul { margin: 6px 0 0; padding-left: 18px; color: var(--text); }
+.error-list li { margin: 2px 0; }
+
+.check-line { display: flex; align-items: center; gap: 8px; color: var(--muted); font-size: 13px; }
+.check-line input { accent-color: var(--accent); }
+
+/* ------------------------------------------------------------------ 章节 */
+.section {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 20px 22px; margin-bottom: 18px;
+}
+.section-head { display: flex; align-items: center; gap: 11px; margin-bottom: 16px; }
+.section-num {
+  width: 26px; height: 26px; flex: none; border-radius: 8px;
+  display: grid; place-items: center;
+  background: var(--accent-weak); color: var(--accent);
+  font-size: 13px; font-weight: 600; font-variant-numeric: tabular-nums;
+}
+.section-head h2 { font-size: 15px; font-weight: 600; }
+.section-head .section-hint { color: var(--faint); font-size: 12.5px; margin-left: auto; }
+
+.action-bar {
+  position: sticky; bottom: 0; z-index: 6;
+  display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+  padding: 14px 0 10px;
+  background: linear-gradient(180deg, rgba(11, 15, 20, 0), var(--bg) 45%);
+}
+.action-bar .left { margin-right: auto; color: var(--faint); font-size: 12.5px; }
+
+.error-list {
+  border: 1px solid rgba(240, 86, 74, 0.35); background: var(--red-weak);
+  border-radius: 10px; padding: 12px 16px; margin-bottom: 16px; font-size: 13px;
+}
+.error-list ul { margin: 6px 0 0; padding-left: 18px; }
+
+/* ------------------------------------------------------------------ 提示条 */
+.alert {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 13px 16px; border-radius: 12px; border: 1px solid;
+  margin-bottom: 14px; font-size: 13.5px;
+}
+.alert .alert-main { flex: 1; min-width: 0; }
+.alert .alert-title { font-weight: 600; margin-bottom: 2px; }
+.alert .alert-desc { color: var(--muted); font-size: 12.5px; }
+.alert .alert-actions { display: flex; gap: 8px; flex: none; padding-top: 1px; }
+.alert-red { border-color: rgba(240, 86, 74, 0.38); background: rgba(240, 86, 74, 0.07); }
+.alert-yellow { border-color: rgba(216, 160, 40, 0.35); background: rgba(216, 160, 40, 0.07); }
+.alert-blue { border-color: rgba(91, 157, 255, 0.32); background: rgba(91, 157, 255, 0.07); }
+.alert-muted { border-color: var(--border); background: rgba(255, 255, 255, 0.02); }
+
+/* ------------------------------------------------------------------ 列表 / 表格 */
+.table-wrap { overflow-x: auto; }
+.table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.table th {
+  text-align: left; font-weight: 500; font-size: 12px; color: var(--muted);
+  padding: 8px 10px; border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.table td { padding: 10px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+.table tr:last-child td { border-bottom: none; }
+.table tbody tr:hover { background: rgba(255, 255, 255, 0.018); }
+.table .num { text-align: right; }
+.table .actions { text-align: right; white-space: nowrap; }
+.table .muted { color: var(--muted); }
+
+.empty { text-align: center; padding: 44px 20px; color: var(--muted); }
+.empty-title { color: var(--text); font-size: 15px; margin-bottom: 6px; }
+.empty .btn { margin-top: 14px; }
+
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border);
+  background: transparent; color: var(--muted); font-size: 12.5px; font-family: inherit;
+  cursor: pointer;
+}
+.chip:hover { color: var(--text); border-color: var(--border-strong); }
+.chip.active { color: var(--accent); border-color: var(--accent); background: var(--accent-weak); }
+
+.bar { height: 6px; border-radius: 999px; background: #0a1017; overflow: hidden; }
+.bar > i { display: block; height: 100%; border-radius: 999px; background: var(--accent); }
+.bar.green > i { background: var(--green); }
+.bar.yellow > i { background: var(--yellow); }
+.bar.red > i { background: var(--red); }
+
+/* ------------------------------------------------------------------ 目标 */
+.goal { padding: 18px 20px; }
+.goal + .goal { border-top: 1px solid var(--border); }
+.goal-head { display: flex; align-items: flex-start; gap: 12px; flex-wrap: wrap; }
+.goal-title { font-size: 16px; font-weight: 600; }
+.goal-sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+.goal-head .goal-actions { margin-left: auto; display: flex; gap: 8px; flex-wrap: wrap; }
+.goal-def { margin-top: 10px; font-size: 13px; color: var(--muted); }
+.goal-def b { color: var(--text); font-weight: 500; }
+.kr-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.kr { display: grid; grid-template-columns: minmax(0, 1fr) 150px 92px; gap: 10px; align-items: center; font-size: 13px; }
+.kr .kr-text { color: var(--text); }
+.kr .kr-bar { height: 5px; border-radius: 999px; background: #0a1017; overflow: hidden; }
+.kr .kr-bar > i { display: block; height: 100%; background: var(--accent); }
+.kr .kr-num { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 12.5px; }
+
+/* ------------------------------------------------------------------ 底线 */
+.rule { padding: 18px 20px; }
+.rule + .rule { border-top: 1px solid var(--border); }
+.rule-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rule-title { font-size: 15px; font-weight: 600; }
+.rule-desc { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+.rule-head .rule-actions { margin-left: auto; display: flex; gap: 8px; }
+.rule-threshold { display: flex; gap: 14px; flex-wrap: wrap; align-items: center; margin-top: 12px; font-size: 12.5px; color: var(--muted); }
+.rule-threshold .th-field { display: flex; align-items: center; gap: 6px; }
+.rule-threshold .input { width: 74px; padding: 4px 8px; font-size: 12.5px; text-align: right; }
+.rule-evidence { margin-top: 12px; display: flex; flex-direction: column; gap: 4px; font-size: 12.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rule-evidence .flag.red::before { content: "✕ "; color: var(--red); }
+.rule-evidence .flag.yellow::before { content: "! "; color: var(--yellow); }
+.rule-evidence .flag.green::before { content: "✓ "; color: var(--green); }
+.decision {
+  margin-top: 14px; padding: 12px 16px; border-radius: 10px;
+  border-left: 3px solid var(--red); background: rgba(240, 86, 74, 0.06);
+  font-size: 13px;
+}
+.decision.overdue { border-left-color: var(--yellow); background: rgba(216, 160, 40, 0.06); }
+.decision .d-line { color: var(--muted); font-size: 12.5px; margin-top: 4px; }
+.decision .d-line b { color: var(--text); font-weight: 500; }
+
+/* ------------------------------------------------------------------ 雷达 */
+.radar-item { padding: 16px 0; border-bottom: 1px solid var(--border); }
+.radar-item:last-child { border-bottom: none; }
+.radar-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.radar-name { font-size: 14.5px; font-weight: 600; }
+.radar-head .radar-actions { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+.radar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 24px; margin-top: 10px; font-size: 12.5px; }
+.radar-grid .k { color: var(--faint); margin-right: 6px; }
+.radar-grid .v { color: var(--muted); }
+.radar-signals { margin: 8px 0 0; padding-left: 18px; color: var(--muted); font-size: 12.5px; }
+.radar-signals li { margin: 2px 0; }
+.radar-meta { margin-top: 10px; display: flex; gap: 14px; flex-wrap: wrap; font-size: 12px; color: var(--faint); align-items: center; }
+.radar-meta .due { color: var(--yellow); }
+
+/* ------------------------------------------------------------------ 弹窗 / Toast */
+.overlay {
+  position: fixed; inset: 0; z-index: 60;
+  background: rgba(3, 6, 10, 0.68);
+  display: flex; align-items: flex-start; justify-content: center;
+  padding: 7vh 16px 16px; overflow-y: auto;
+}
+.modal {
+  width: 100%; max-width: 580px;
+  background: var(--surface); border: 1px solid var(--border-strong);
+  border-radius: 16px; box-shadow: var(--shadow);
+}
+.modal.wide { max-width: 720px; }
+.modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 17px 22px; border-bottom: 1px solid var(--border); }
+.modal-head h3 { font-size: 15px; font-weight: 600; }
+.modal-close { background: none; border: none; color: var(--muted); font-size: 20px; line-height: 1; cursor: pointer; padding: 2px 6px; border-radius: 6px; }
+.modal-close:hover { color: var(--text); background: rgba(255, 255, 255, 0.05); }
+.modal-body { padding: 20px 22px; max-height: 66vh; overflow-y: auto; }
+.modal-foot { display: flex; justify-content: flex-end; gap: 10px; padding: 14px 22px; border-top: 1px solid var(--border); }
+
+#toast-root { position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%); z-index: 90; display: flex; flex-direction: column; gap: 8px; align-items: center; pointer-events: none; }
+.toast {
+  padding: 9px 16px; border-radius: 10px; font-size: 13px;
+  background: #1b2632; border: 1px solid var(--border-strong);
+  color: var(--text); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+  animation: toast-in 0.18s ease-out;
+}
+.toast.ok { border-color: rgba(63, 185, 80, 0.45); }
+.toast.error { border-color: rgba(240, 86, 74, 0.5); }
+@keyframes toast-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+/* ------------------------------------------------------------------ 其他 */
+.muted { color: var(--muted); }
+.faint { color: var(--faint); }
+.tiny { font-size: 12px; }
+.small { font-size: 12.5px; }
+.mt-2 { margin-top: 8px; }
+.mt-3 { margin-top: 12px; }
+.mt-4 { margin-top: 16px; }
+.mb-2 { margin-bottom: 8px; }
+.mb-3 { margin-bottom: 12px; }
+.mb-4 { margin-bottom: 16px; }
+.flex { display: flex; }
+.flex-between { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.flex-gap { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.wrap { flex-wrap: wrap; }
+.divider { height: 1px; background: var(--border); margin: 16px 0; border: none; }
+.kbd { font-family: ui-monospace, Consolas, monospace; font-size: 11.5px; padding: 1px 6px; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); }
+.nowrap { white-space: nowrap; }
+.hidden { display: none !important; }
+
+/* ------------------------------------------------------------------ 响应式 */
+@media (max-width: 1000px) {
+  .grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .app { flex-direction: column; }
+  .sidebar {
+    position: relative; width: 100%; height: auto; flex: none;
+    border-right: none; border-bottom: 1px solid var(--border);
+    padding: 12px 16px; flex-direction: row; align-items: center; gap: 14px; overflow-x: auto;
+  }
+  .brand { padding: 0; flex: none; }
+  .brand-sub { display: none; }
+  .nav { flex-direction: row; }
+  .nav a { padding: 6px 10px; white-space: nowrap; }
+  .nav a .nav-glyph { display: none; }
+  .side-foot { margin: 0 0 0 auto; flex-direction: row; align-items: center; padding: 0; }
+  .side-ver { display: none; }
+  .main { padding: 20px 16px 60px; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .form-grid { grid-template-columns: 1fr; }
+  .radar-grid { grid-template-columns: 1fr; }
+  .kr { grid-template-columns: 1fr 90px 80px; }
+}
+@media (max-width: 620px) {
+  .grid-4 { grid-template-columns: 1fr 1fr; }
+  .row-line { grid-template-columns: 1fr 80px; }
+  .row-line.debt { grid-template-columns: 1fr 1fr 80px; }
+  .row-line .rm { grid-column: -2 / -1; justify-self: end; }
+}
+
+</style>
+</head>
+<body>
+  <div id="boot-hint" style="position:fixed;left:50%;bottom:18px;transform:translateX(-50%);z-index:999;max-width:92%;background:#2b2410;border:1px solid #6b5a23;color:#ffe9b3;padding:10px 16px;border-radius:10px;font:13px/1.7 -apple-system,'Segoe UI','Microsoft YaHei',sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.45)">
+    如果页面一直是空白的：说明脚本没有运行。请用 Edge / Chrome 直接打开本地文件（或双击「打开前途.bat」），不要用聊天窗口/文件管理器里的预览功能打开。
+  </div>
+  <script>
+    (function () {
+      var hint = document.getElementById('boot-hint');
+      // 脚本能执行就隐藏提示；若脚本被预览环境或安全策略拦截，提示会保留
+      if (hint) hint.style.display = 'none';
+      window.addEventListener('error', function (e) {
+        try {
+          var box = document.createElement('div');
+          box.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:10000;background:#3a1214;border-bottom:1px solid #6b2326;color:#ffd7d5;padding:10px 16px;font:13px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif';
+          box.textContent = '前途启动出错：' + (e.message || '脚本错误') + '。建议用最新版 Edge / Chrome 打开本文件。';
+          document.body.appendChild(box);
+        } catch (err) { /* ignore */ }
+      });
+      setTimeout(function () {
+        if (window.__qiantuBooted) return;
+        try {
+          var box = document.createElement('div');
+          box.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:10000;background:#2b2410;border-bottom:1px solid #6b5a23;color:#ffe9b3;padding:10px 16px;font:13px/1.7 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif';
+          box.textContent = '应用没有正常启动：请确认是用 Edge / Chrome 打开的本地文件，而不是在聊天窗口的预览/下载卡片里打开。';
+          document.body.appendChild(box);
+        } catch (err) { /* ignore */ }
+      }, 2000);
+    })();
+  </script>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">前</div>
+        <div>
+          <div class="brand-name">前途</div>
+          <div class="brand-sub">QIANTU · INTJ</div>
+        </div>
+      </div>
+      <nav class="nav" id="nav">
+        <a href="#/home" data-route="home"><span class="nav-glyph">◉</span>总览</a>
+        <a href="#/reviews" data-route="reviews"><span class="nav-glyph">▤</span>季度复盘</a>
+        <a href="#/goals" data-route="goals"><span class="nav-glyph">◎</span>年度目标</a>
+        <a href="#/bottom" data-route="bottom"><span class="nav-glyph">⚑</span>底线</a>
+        <a href="#/radar" data-route="radar"><span class="nav-glyph">◇</span>赛道雷达</a>
+      </nav>
+      <div class="side-foot">
+        <a href="#/settings" data-route="settings">设置与备份</a>
+        <span class="demo-tag hidden" id="demo-tag">演示数据</span>
+        <div class="side-ver">v1.0 MVP · 数据仅存本机</div>
+      </div>
+    </aside>
+    <main class="main">
+      <div id="view" class="page"></div>
+    </main>
+  </div>
+  <div id="modal-root"></div>
+  <div id="toast-root"></div>
+  <script>
+/* 前途 QIANTU — 核心逻辑
+ * 数据模型、季度计算、四本账指标、底线规则、校验、本地存储。
+ * 本文件不依赖 DOM，可直接在 Node 中 require 测试。
+ */
+(function (global) {
+  'use strict';
+
+  var STORE_KEY = 'qiantu:v1';
+  var LEGACY_STORE_KEYS = ['calibrate:v1']; // 旧版本（「校准」）的数据键，读取时自动迁移
+  var SCHEMA_VERSION = 1;
+  var QUARTER_START_MONTH = 1;
+  var STANDARD_MONTH_HOURS = 174; // 21.75 天 × 8h，用于换算“市场有效时薪”
+
+  // ---------------------------------------------------------------- 枚举
+  var ENUMS = {
+    salaryEvent: [
+      { value: 'none', label: '无变化' },
+      { value: 'raised', label: '已涨薪' },
+      { value: 'negotiating', label: '在谈' },
+      { value: 'jumped', label: '已跳槽' },
+      { value: 'planned', label: '计划中' }
+    ],
+    incomeJudgement: [
+      { value: 'healthy', label: '收益健康' },
+      { value: 'optimize', label: '结构待优化' },
+      { value: 'change', label: '需要换环境' }
+    ],
+    skillJudgement: [
+      { value: 'accumulating', label: '有积累' },
+      { value: 'stagnant', label: '原地踏步' },
+      { value: 'consuming', label: '在消耗' }
+    ],
+    transferability: [
+      { value: 'high', label: '高（跨行业可用）' },
+      { value: 'mid', label: '中（部分可迁移）' },
+      { value: 'low', label: '低（绑定当前公司）' }
+    ],
+    financeJudgement: [
+      { value: 'safe', label: '安全（≥12 个月）' },
+      { value: 'warning', label: '警戒（6–12 个月）' },
+      { value: 'danger', label: '危险（<6 个月）' }
+    ],
+    socialSecurity: [
+      { value: 'continuous', label: '连续缴纳' },
+      { value: 'broken', label: '断缴' },
+      { value: 'none', label: '未缴' }
+    ],
+    careerRisk: [
+      { value: 'shrink', label: '公司/行业收缩' },
+      { value: 'replaceable', label: '岗位可替代性高' },
+      { value: 'normal', label: '一般' },
+      { value: 'low', label: '低' }
+    ],
+    riskJudgement: [
+      { value: 'controllable', label: '可控' },
+      { value: 'handle', label: '需处理' },
+      { value: 'triggered', label: '已触发底线' }
+    ],
+    conclusion: [
+      { value: 'continue', label: '继续按计划' },
+      { value: 'adjust', label: '调整方向' },
+      { value: 'exit', label: '启动退出评估' }
+    ],
+    goalStatus: [
+      { value: 'active', label: '进行中' },
+      { value: 'maintained', label: '维持' },
+      { value: 'achieved', label: '已达成' },
+      { value: 'dropped', label: '已放弃' }
+    ],
+    midYear: [
+      { value: 'continue', label: '继续' },
+      { value: 'maintain', label: '降级为维持' },
+      { value: 'drop', label: '正式放弃' }
+    ],
+    watchStatus: [
+      { value: 'observing', label: '观察中' },
+      { value: 'researching', label: '研究中' },
+      { value: 'entered', label: '已进入' },
+      { value: 'dropped', label: '已放弃' }
+    ],
+    debtType: [
+      { value: 'mortgage', label: '房贷' },
+      { value: 'car', label: '车贷' },
+      { value: 'consumer', label: '消费贷' },
+      { value: 'credit', label: '信用卡' },
+      { value: 'other', label: '其他' }
+    ],
+    ruleStatus: [
+      { value: 'green', label: '正常' },
+      { value: 'yellow', label: '接近阈值' },
+      { value: 'red', label: '已触发' },
+      { value: 'unknown', label: '未评估' }
+    ],
+    decisionChoice: [
+      { value: 'defer', label: 'A 设定期限观望（≤60 天）' },
+      { value: 'prepare', label: 'B 启动准备（简历 / 技能盘点 / 接触机会）' },
+      { value: 'exit', label: 'C 执行退出（定离职或转型时间表）' }
+    ]
+  };
+
+  var RULE_META = {
+    growth: {
+      title: '长期无成长',
+      desc: '连续若干季度技能判断为「原地踏步 / 在消耗」，且当季投入低于阈值。',
+      fields: [
+        { key: 'consecutiveQuarters', label: '连续季度数', suffix: '季', min: 1, max: 8 },
+        { key: 'skillHoursMin', label: '季度最低投入', suffix: '小时', min: 0, max: 500 }
+      ]
+    },
+    health: {
+      title: '严重透支身体',
+      desc: '连续若干季度出现周均熬夜 ≥ 阈值 或 体检新增异常 ≥ 阈值。',
+      fields: [
+        { key: 'consecutiveQuarters', label: '连续季度数', suffix: '季', min: 1, max: 8 },
+        { key: 'lateNightsThreshold', label: '周均熬夜阈值', suffix: '天', min: 1, max: 7 },
+        { key: 'examAbnormalThreshold', label: '体检异常阈值', suffix: '项', min: 1, max: 10 }
+      ]
+    },
+    salary: {
+      title: '薪资长期低于市场',
+      desc: '连续若干季度有效时薪低于市场有效时薪的指定比例（市场月薪 ÷ 174h 换算）。',
+      fields: [
+        { key: 'consecutiveQuarters', label: '连续季度数', suffix: '季', min: 1, max: 8 },
+        { key: 'marketRatio', label: '市场中位数比例', suffix: '×', min: 0.1, max: 2, step: 0.05 }
+      ]
+    }
+  };
+
+  // ---------------------------------------------------------------- 基础工具
+  function uid(prefix) {
+    return (prefix || 'id') + '_' + Date.now().toString(36) + '_' + Math.random().toString(36).slice(2, 8);
+  }
+
+  function n(value) {
+    var v = typeof value === 'string' ? parseFloat(value) : value;
+    return typeof v === 'number' && isFinite(v) ? v : 0;
+  }
+
+  function nullableNum(value) {
+    if (value === null || value === undefined || value === '') return null;
+    var v = typeof value === 'string' ? parseFloat(value) : value;
+    return typeof v === 'number' && isFinite(v) ? v : null;
+  }
+
+  function round(v, digits) {
+    var p = Math.pow(10, digits == null ? 2 : digits);
+    return Math.round(v * p) / p;
+  }
+
+  function clamp(v, min, max) {
+    return Math.min(max, Math.max(min, v));
+  }
+
+  function fmtMoney(v) {
+    if (v == null || !isFinite(v)) return '—';
+    return '¥' + Math.round(v).toLocaleString('zh-CN');
+  }
+
+  function fmtNum(v, digits) {
+    if (v == null || !isFinite(v)) return '—';
+    var r = round(v, digits == null ? 0 : digits);
+    return r.toLocaleString('zh-CN', { maximumFractionDigits: digits == null ? 0 : digits });
+  }
+
+  function fmtPct(v, digits) {
+    if (v == null || !isFinite(v)) return '—';
+    return round(v * 100, digits == null ? 1 : digits) + '%';
+  }
+
+  function pad2(v) {
+    return v < 10 ? '0' + v : '' + v;
+  }
+
+  function isoDate(d) {
+    var date = d instanceof Date ? d : new Date(d);
+    return date.getFullYear() + '-' + pad2(date.getMonth() + 1) + '-' + pad2(date.getDate());
+  }
+
+  function todayISO() {
+    return isoDate(new Date());
+  }
+
+  function fmtDate(iso) {
+    if (!iso) return '—';
+    var s = String(iso).slice(0, 10);
+    var parts = s.split('-');
+    if (parts.length !== 3) return s;
+    return parts[0] + '年' + parseInt(parts[1], 10) + '月' + parseInt(parts[2], 10) + '日';
+  }
+
+  function fmtShortDate(iso) {
+    if (!iso) return '—';
+    var s = String(iso).slice(0, 10);
+    var parts = s.split('-');
+    if (parts.length !== 3) return s;
+    return parseInt(parts[1], 10) + '/' + parseInt(parts[2], 10);
+  }
+
+  function parseISO(iso) {
+    if (!iso) return null;
+    var s = String(iso);
+    var date = new Date(s.length === 10 ? s + 'T00:00:00' : s);
+    return isNaN(date.getTime()) ? null : date;
+  }
+
+  function daysBetween(fromISO, toISO) {
+    var a = parseISO(fromISO);
+    var b = parseISO(toISO || todayISO());
+    if (!a || !b) return 0;
+    var ms = b.getTime() - a.getTime();
+    return Math.floor(ms / 86400000);
+  }
+
+  function startOfWeek(d) {
+    var date = new Date(d.getTime());
+    date.setHours(0, 0, 0, 0);
+    var day = date.getDay(); // 0=Sun
+    var diff = day === 0 ? 6 : day - 1;
+    date.setDate(date.getDate() - diff);
+    return date;
+  }
+
+  function escapeHtml(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  function deepGet(obj, path) {
+    var parts = path.split('.');
+    var cur = obj;
+    for (var i = 0; i < parts.length; i++) {
+      if (cur == null) return undefined;
+      cur = cur[parts[i]];
+    }
+    return cur;
+  }
+
+  function setByPath(obj, path, value) {
+    var parts = path.split('.');
+    var cur = obj;
+    for (var i = 0; i < parts.length - 1; i++) {
+      var key = parts[i];
+      if (cur[key] == null) cur[key] = /^\d+$/.test(parts[i + 1]) ? [] : {};
+      cur = cur[key];
+    }
+    cur[parts[parts.length - 1]] = value;
+  }
+
+  // ---------------------------------------------------------------- 季度
+  function quarterOf(date, startMonth) {
+    var sm = startMonth || QUARTER_START_MONTH;
+    var d = date instanceof Date ? date : new Date(date);
+    var m = d.getMonth() + 1;
+    var fy = m >= sm ? d.getFullYear() : d.getFullYear() - 1;
+    var offset = (m - sm + 12) % 12;
+    var q = Math.floor(offset / 3) + 1;
+    return { fy: fy, q: q };
+  }
+
+  function quarterLabel(date, startMonth) {
+    var qi = quarterOf(date, startMonth);
+    return qi.fy + '-Q' + qi.q;
+  }
+
+  function currentQuarter(now, startMonth) {
+    var d = now || new Date();
+    var qi = quarterOf(d, startMonth);
+    return {
+      fy: qi.fy,
+      q: qi.q,
+      label: qi.fy + '-Q' + qi.q,
+      start: isoDate(quarterStartDate(qi.fy, qi.q, startMonth)),
+      end: isoDate(quarterEndDate(qi.fy, qi.q, startMonth))
+    };
+  }
+
+  function quarterStartDate(fy, q, startMonth) {
+    var sm = startMonth || QUARTER_START_MONTH;
+    var monthIndex = (sm - 1) + (q - 1) * 3;
+    var y = fy + Math.floor(monthIndex / 12);
+    var m = ((monthIndex % 12) + 12) % 12;
+    return new Date(y, m, 1);
+  }
+
+  function quarterEndDate(fy, q, startMonth) {
+    var start = quarterStartDate(fy, q, startMonth);
+    return new Date(start.getFullYear(), start.getMonth() + 3, 0);
+  }
+
+  function parseQuarterLabel(label) {
+    var m = /^(\d{4})-Q([1-4])$/.exec(String(label || ''));
+    if (!m) return null;
+    return { fy: parseInt(m[1], 10), q: parseInt(m[2], 10) };
+  }
+
+  function quarterIndex(label) {
+    var p = parseQuarterLabel(label);
+    return p ? p.fy * 4 + p.q : 0;
+  }
+
+  function recentQuarterLabels(count, now, startMonth) {
+    var labels = [];
+    var cur = currentQuarter(now, startMonth);
+    var start = quarterStartDate(cur.fy, cur.q, startMonth);
+    for (var i = 0; i < count; i++) {
+      var d = new Date(start.getFullYear(), start.getMonth() - i * 3, 1);
+      labels.push(quarterLabel(d, startMonth));
+    }
+    return labels;
+  }
+
+  function quarterRangeText(label, startMonth) {
+    var p = parseQuarterLabel(label);
+    if (!p) return label;
+    var s = quarterStartDate(p.fy, p.q, startMonth);
+    var e = quarterEndDate(p.fy, p.q, startMonth);
+    return fmtShortDate(isoDate(s)) + ' – ' + fmtShortDate(isoDate(e));
+  }
+
+  // ---------------------------------------------------------------- 指标计算
+  function computeIncome(income) {
+    var inc = income || {};
+    var main = n(inc.main), side = n(inc.side), other = n(inc.other);
+    var total = main + side + other;
+    var hours = n(inc.monthlyHours);
+    return {
+      main: main,
+      side: side,
+      other: other,
+      total: total,
+      monthlyHours: hours,
+      effectiveHourly: hours > 0 ? total / hours : null,
+      structure: total > 0 ? { main: main / total, side: side / total, other: other / total } : null
+    };
+  }
+
+  function computeFinance(finance) {
+    var f = finance || {};
+    var cash = n(f.cash);
+    var expense = n(f.monthlyExpense);
+    var income = n(f.monthlyIncome);
+    var savings = income - expense;
+    return {
+      cash: cash,
+      monthlyExpense: expense,
+      savingsRate: income > 0 ? savings / income : null,
+      runwayMonths: expense > 0 ? cash / expense : null,
+      debts: (f.debts || []).slice()
+    };
+  }
+
+  function suggestIncomeJudgement(income, settings) {
+    var inc = income || {};
+    var main = n(inc.main);
+    var market = n(inc.marketMonthlyMedian) || n((settings || {}).marketMedianSalary);
+    if (!market || main <= 0) return null;
+    var ratio = main / market;
+    if (ratio >= 1) return 'healthy';
+    if (ratio >= 0.8) return 'optimize';
+    return 'change';
+  }
+
+  function suggestSkillJudgement(skills) {
+    var s = skills || {};
+    var hours = n(s.hours);
+    if (hours >= 20) return 'accumulating';
+    if (hours > 0) return 'stagnant';
+    return 'consuming';
+  }
+
+  function suggestFinanceJudgement(finance) {
+    var fin = computeFinance(finance);
+    if (fin.runwayMonths == null) return null;
+    if (fin.runwayMonths >= 12) return 'safe';
+    if (fin.runwayMonths >= 6) return 'warning';
+    return 'danger';
+  }
+
+  function suggestRiskJudgement(risk) {
+    var r = risk || {};
+    if (r.socialSecurity === 'none' || r.socialSecurity === 'broken') return 'handle';
+    var h = r.health || {};
+    if (n(h.lateNightsPerWeek) >= 4 || n(h.abnormalExamItems) >= 2) return 'handle';
+    if (r.careerRisk === 'shrink' || r.careerRisk === 'replaceable') return 'handle';
+    return 'controllable';
+  }
+
+  function countEvidence(items) {
+    return (items || []).filter(function (it) {
+      return it && it.keep !== false && String(it.evidence || '').trim() !== '';
+    }).length;
+  }
+
+  /** 复盘表单里可实时计算的指标 */
+  function reviewMetrics(review, settings) {
+    var r = review || {};
+    var income = computeIncome(r.income);
+    var finance = computeFinance(Object.assign({}, r.finance, { monthlyIncome: income.total }));
+    var skillItems = (r.skills && r.skills.items) || [];
+    return {
+      income: income,
+      finance: finance,
+      effectiveHourly: income.effectiveHourly,
+      savingRate: income.total > 0 && finance.monthlyExpense > 0 ? (income.total - finance.monthlyExpense) / income.total : null,
+      runwayMonths: finance.runwayMonths,
+      debtBalance: (finance.debts || []).reduce(function (sum, d) { return sum + n(d.balance); }, 0),
+      skillHours: n((r.skills || {}).hours),
+      evidenceCount: countEvidence(skillItems),
+      suggestions: {
+        income: suggestIncomeJudgement(r.income, settings),
+        skills: suggestSkillJudgement(r.skills),
+        finance: suggestFinanceJudgement(Object.assign({}, r.finance, { monthlyIncome: income.total })),
+        risk: suggestRiskJudgement(r.risk)
+      }
+    };
+  }
+
+  // ---------------------------------------------------------------- 校验
+  function validateReview(review) {
+    var r = review || {};
+    var errors = [];
+    var inc = r.income || {};
+    var fin = r.finance || {};
+    var risk = r.risk || {};
+    var skill = r.skills || {};
+
+    function reqNum(path, val, label, min) {
+      if (nullableNum(val) == null) {
+        errors.push({ path: path, msg: label + ' 未填写' });
+      } else if (n(val) < (min == null ? 0 : min)) {
+        errors.push({ path: path, msg: label + ' 不能小于 ' + (min == null ? 0 : min) });
+      }
+    }
+
+    reqNum('income.main', inc.main, '主业月均收入', 0);
+    reqNum('income.side', inc.side, '副业月均收入', 0);
+    reqNum('income.other', inc.other, '其他月均收入', 0);
+    reqNum('income.monthlyHours', inc.monthlyHours, '月均总工时', 1);
+    if (n(inc.main) + n(inc.side) + n(inc.other) <= 0) {
+      errors.push({ path: 'income.main', msg: '总收入不能为 0' });
+    }
+    if (nullableNum(inc.marketMonthlyMedian) == null) {
+      errors.push({ path: 'income.marketMonthlyMedian', msg: '市场月薪中位数未填写（薪资底线规则需要它）' });
+    }
+    if (!inc.salaryEvent) errors.push({ path: 'income.salaryEvent', msg: '未选择涨薪/跳槽节点' });
+    if (!inc.judgement) errors.push({ path: 'income.judgement', msg: '主业收益判断未选择' });
+
+    reqNum('skills.hours', skill.hours, '技能投入时长', 0);
+    if (!skill.transferability) errors.push({ path: 'skills.transferability', msg: '可迁移性未选择' });
+    if (!skill.judgement) errors.push({ path: 'skills.judgement', msg: '技能积累判断未选择' });
+
+    reqNum('finance.cash', fin.cash, '现金存款', 0);
+    reqNum('finance.monthlyExpense', fin.monthlyExpense, '月均总支出', 1);
+    if (!fin.judgement) errors.push({ path: 'finance.judgement', msg: '存款判断未选择' });
+
+    if (!risk.socialSecurity) errors.push({ path: 'risk.socialSecurity', msg: '社保/公积金状态未选择' });
+    if (!risk.socialSecurityCheckedAt) errors.push({ path: 'risk.socialSecurityCheckedAt', msg: '社保核对日期未填写' });
+    reqNum('risk.health.abnormalExamItems', (risk.health || {}).abnormalExamItems, '体检新增异常项数', 0);
+    reqNum('risk.health.workoutPerWeek', (risk.health || {}).workoutPerWeek, '周均运动次数', 0);
+    reqNum('risk.health.lateNightsPerWeek', (risk.health || {}).lateNightsPerWeek, '周均熬夜天数', 0);
+    if (!risk.careerRisk) errors.push({ path: 'risk.careerRisk', msg: '职业风险未选择' });
+    if (!risk.judgement) errors.push({ path: 'risk.judgement', msg: '风险判断未选择' });
+
+    if (!r.conclusion) errors.push({ path: 'conclusion', msg: '本季结论未选择' });
+    if (!r.oneLineSummary || String(r.oneLineSummary).trim().length < 4) {
+      errors.push({ path: 'oneLineSummary', msg: '本季一句话总结至少 4 个字' });
+    }
+    if (!r.topOne || String(r.topOne).trim().length < 4) {
+      errors.push({ path: 'topOne', msg: '下季唯一最重要的事未填写（至少 4 个字）' });
+    }
+    return errors;
+  }
+
+  function validateGoal(goal) {
+    var errors = [];
+    if (!goal.title || String(goal.title).trim().length < 2) errors.push({ path: 'title', msg: '目标名至少 2 个字' });
+    if (!goal.definitionOfDone || String(goal.definitionOfDone).trim().length < 4) {
+      errors.push({ path: 'definitionOfDone', msg: '完成标准必须可验证（至少 4 个字）' });
+    }
+    if (!goal.deadline) errors.push({ path: 'deadline', msg: '截止时间未填写' });
+    var krs = (goal.keyResults || []).filter(function (k) { return String(k.text || '').trim(); });
+    if (krs.length === 0) errors.push({ path: 'keyResults', msg: '至少填写 1 条关键结果' });
+    if (krs.length > 3) errors.push({ path: 'keyResults', msg: '关键结果最多 3 条' });
+    for (var i = 0; i < krs.length; i++) {
+      if (nullableNum(krs[i].target) == null || n(krs[i].target) <= 0) {
+        errors.push({ path: 'keyResults', msg: '第 ' + (i + 1) + ' 条关键结果需要填写数字目标' });
+      }
+    }
+    return errors;
+  }
+
+  function validateWatchItem(item) {
+    var errors = [];
+    if (!item.name || String(item.name).trim().length < 2) errors.push({ path: 'name', msg: '赛道名至少 2 个字' });
+    var signals = (item.signals || []).filter(function (s) { return String(s || '').trim(); });
+    if (signals.length < 2) errors.push({ path: 'signals', msg: '至少填写 2 条信号（这是判断增量的依据）' });
+    if (n(item.crowdedness) < 1 || n(item.crowdedness) > 5) errors.push({ path: 'crowdedness', msg: '拥挤度需在 1–5 之间' });
+    return errors;
+  }
+
+  // ---------------------------------------------------------------- 底线规则
+  function completedReviewsChron(data) {
+    return ((data && data.reviews) || [])
+      .filter(function (r) { return r.status === 'done'; })
+      .sort(function (a, b) { return quarterIndex(a.quarter) - quarterIndex(b.quarter); });
+  }
+
+  function ruleQuarterFlag(type, review, threshold, settings) {
+    var label = review.quarter;
+    var th = threshold || {};
+    var m = reviewMetrics(review, settings);
+    if (type === 'growth') {
+      var judgement = (review.skills || {}).judgement;
+      var hours = m.skillHours;
+      var bad = (judgement === 'stagnant' || judgement === 'consuming') && hours < n(th.skillHoursMin);
+      return {
+        label: label,
+        bad: bad,
+        detail: label + ' · 投入 ' + fmtNum(hours, 0) + 'h · ' + enumLabel(ENUMS.skillJudgement, judgement)
+      };
+    }
+    if (type === 'health') {
+      var h = (review.risk || {}).health || {};
+      var late = n(h.lateNightsPerWeek);
+      var exam = n(h.abnormalExamItems);
+      var badHealth = late >= n(th.lateNightsThreshold) || exam >= n(th.examAbnormalThreshold);
+      return {
+        label: label,
+        bad: badHealth,
+        detail: label + ' · 熬夜 ' + fmtNum(late, 0) + ' 天/周 · 体检异常 ' + fmtNum(exam, 0) + ' 项'
+      };
+    }
+    if (type === 'salary') {
+      var market = n((review.income || {}).marketMonthlyMedian) || n((settings || {}).marketMedianSalary);
+      if (!market) {
+        return { label: label, bad: null, detail: label + ' · 缺少市场数据' };
+      }
+      var marketHourly = market / STANDARD_MONTH_HOURS;
+      var hourly = m.effectiveHourly;
+      if (hourly == null) return { label: label, bad: null, detail: label + ' · 缺少工时数据' };
+      var ratio = hourly / marketHourly;
+      var badSalary = ratio < n(th.marketRatio);
+      return {
+        label: label,
+        bad: badSalary,
+        detail: label + ' · 有效时薪 ' + fmtMoney(hourly) + ' / 市场 ' + fmtMoney(marketHourly) + '（' + fmtPct(ratio) + '）'
+      };
+    }
+    return { label: label, bad: null, detail: label };
+  }
+
+  function evaluateRule(rule, reviews, settings) {
+    var type = rule.type;
+    var need = clamp(Math.round(n((rule.threshold || {}).consecutiveQuarters) || 2), 1, 8);
+    var flags = reviews.map(function (r) { return ruleQuarterFlag(type, r, rule.threshold, settings); });
+    var status = 'green';
+    if (flags.length === 0) {
+      status = 'unknown';
+    } else {
+      var known = flags.filter(function (f) { return f.bad !== null; });
+      if (known.length === 0) {
+        status = 'unknown';
+      } else {
+        var count = 0;
+        for (var i = flags.length - 1; i >= 0; i--) {
+          if (flags[i].bad === null) continue;
+          if (flags[i].bad) count++;
+          else break;
+        }
+        status = count >= need ? 'red' : count > 0 ? 'yellow' : 'green';
+      }
+    }
+    return {
+      type: type,
+      ruleId: rule.id,
+      need: need,
+      status: status,
+      flags: flags.slice(-6),
+      badCount: flags.filter(function (f) { return f.bad === true; }).length
+    };
+  }
+
+  function currentDecision(rule) {
+    var list = rule.decisions || [];
+    for (var i = list.length - 1; i >= 0; i--) {
+      if (!list[i].reviewedAt) return list[i];
+    }
+    return null;
+  }
+
+  function runRules(data, now) {
+    var reviews = completedReviewsChron(data);
+    var rules = (data.bottomLines || []).map(function (rule) {
+      var res = evaluateRule(rule, reviews, data.settings || {});
+      var decision = currentDecision(rule);
+      var overdue = decision && decision.deadline ? daysBetween(decision.deadline, isoDate(now || new Date())) > 0 : false;
+      return Object.assign({
+        title: RULE_META[rule.type] ? RULE_META[rule.type].title : rule.type,
+        enabled: rule.enabled !== false,
+        decision: decision,
+        decisionOverdue: !!overdue
+      }, res);
+    });
+    return rules;
+  }
+
+  // ---------------------------------------------------------------- 目标
+  function activeGoals(goals, year) {
+    return (goals || []).filter(function (g) {
+      return (g.year === year || year == null) && (g.status === 'active' || g.status === 'maintained');
+    });
+  }
+
+  function goalNextAction(goal) {
+    var krs = (goal.keyResults || []).filter(function (k) { return String(k.text || '').trim(); });
+    var pending = krs.find(function (k) { return n(k.current) < n(k.target); });
+    return pending ? pending.text : '关键结果已全部完成，可结项';
+  }
+
+  function goalProgress(goal) {
+    var krs = (goal.keyResults || []).filter(function (k) { return String(k.text || '').trim() && n(k.target) > 0; });
+    if (krs.length === 0) return null;
+    var sum = krs.reduce(function (acc, k) { return acc + clamp(n(k.current) / n(k.target), 0, 1); }, 0);
+    return sum / krs.length;
+  }
+
+  // ---------------------------------------------------------------- 赛道雷达
+  function observationDays(item, now) {
+    if (!item || !item.observationStartedAt) return 0;
+    return Math.max(0, Math.floor((new Date(now || new Date()).getTime() - parseISO(item.observationStartedAt).getTime()) / 86400000));
+  }
+
+  function canWatchTransition(item, target, now) {
+    if (!item) return { ok: false, daysLeft: 30 };
+    if (item.status !== 'observing') return { ok: true, daysLeft: 0 };
+    if (target === item.status) return { ok: true, daysLeft: 0 };
+    if (target === 'dropped') return { ok: true, daysLeft: 0 }; // 主动放弃不受观察期限制
+    var days = observationDays(item, now);
+    if (days >= 30) return { ok: true, daysLeft: 0 };
+    return { ok: false, daysLeft: 30 - days };
+  }
+
+  // ---------------------------------------------------------------- 信息定投
+  function weekInputMinutes(data, now) {
+    var weekStart = startOfWeek(now || new Date());
+    var startISO = isoDate(weekStart);
+    return ((data && data.inputLog) || []).reduce(function (sum, entry) {
+      var d = parseISO(entry.date);
+      if (d && isoDate(d) >= startISO) return sum + n(entry.minutes);
+      return sum;
+    }, 0);
+  }
+
+  function backupDays(data, now) {
+    if (!data || !data.lastExportAt) return null;
+    return daysBetween(data.lastExportAt, isoDate(now || new Date()));
+  }
+
+  // ---------------------------------------------------------------- 默认数据 / 演示数据
+  function defaultData(now) {
+    var date = now || new Date();
+    var q = currentQuarter(date);
+    return {
+      schemaVersion: SCHEMA_VERSION,
+      createdAt: date.toISOString(),
+      updatedAt: date.toISOString(),
+      settings: {
+        quarterStartMonth: QUARTER_START_MONTH,
+        weeklyInputGoalMinutes: 60,
+        marketMedianSalary: 16000,
+        currency: 'CNY'
+      },
+      goals: [],
+      reviews: [],
+      bottomLines: [
+        { id: 'bl-growth', type: 'growth', enabled: true, threshold: { consecutiveQuarters: 2, skillHoursMin: 20 }, decisions: [] },
+        { id: 'bl-health', type: 'health', enabled: true, threshold: { consecutiveQuarters: 2, lateNightsThreshold: 4, examAbnormalThreshold: 2 }, decisions: [] },
+        { id: 'bl-salary', type: 'salary', enabled: true, threshold: { consecutiveQuarters: 2, marketRatio: 0.8 }, decisions: [] }
+      ],
+      watchItems: [],
+      inputLog: [],
+      lastExportAt: null,
+      currentQuarterLabel: q.label
+    };
+  }
+
+  function makeDemoReview(quarter, opts) {
+    var o = opts || {};
+    var start = quarterStartDate.apply(null, (function () {
+      var p = parseQuarterLabel(quarter);
+      return [p.fy, p.q, QUARTER_START_MONTH];
+    })());
+    var completed = new Date(start.getFullYear(), start.getMonth() + 3, 3, 12, 0, 0);
+    return {
+      id: 'rv_demo_' + quarter,
+      quarter: quarter,
+      status: 'done',
+      createdAt: completed.toISOString(),
+      updatedAt: completed.toISOString(),
+      completedAt: completed.toISOString(),
+      income: {
+        main: o.main,
+        side: o.side,
+        other: 0,
+        monthlyHours: o.hours,
+        marketMonthlyMedian: 16000,
+        salaryEvent: o.salaryEvent || 'none',
+        judgement: o.incomeJudgement || 'healthy'
+      },
+      skills: {
+        hours: o.skillHours,
+        items: o.skillItems || [
+          { name: '数据分析', level: 3, evidence: '2 个作品', keep: true },
+          { name: '英语', level: 3, evidence: '', keep: true }
+        ],
+        transferability: 'high',
+        judgement: o.skillJudgement
+      },
+      finance: {
+        cash: o.cash,
+        monthlyExpense: 6200,
+        debts: [{ type: 'mortgage', balance: 820000, monthly: 4300, rate: 4.1 }],
+        judgement: 'safe'
+      },
+      risk: {
+        socialSecurity: 'continuous',
+        socialSecurityCheckedAt: isoDate(new Date(start.getFullYear(), start.getMonth() + 3, 1)),
+        health: { abnormalExamItems: o.exam || 0, workoutPerWeek: 2, lateNightsPerWeek: o.lateNights },
+        careerRisk: 'normal',
+        legalNotes: '',
+        judgement: o.riskJudgement || 'controllable'
+      },
+      bottomLine: {},
+      conclusion: o.conclusion || 'continue',
+      topOne: o.topOne,
+      abandonList: o.abandonList || '',
+      oneLineSummary: o.summary
+    };
+  }
+
+  function buildDemoData(now) {
+    var date = now || new Date();
+    var labels = recentQuarterLabels(4, date);
+    var data = defaultData(date);
+    var old = labels[3], q1 = labels[2], q2 = labels[1], q3 = labels[0];
+    data.reviews = [
+      makeDemoReview(old, {
+        main: 15000, side: 2000, hours: 208, skillHours: 30, skillJudgement: 'accumulating',
+        cash: 98000, lateNights: 1, exam: 0, topOne: '完成数据分析进阶课程第一模块',
+        summary: '收入结构稳定，技能投入正常，下季继续保持。', abandonList: '减少无效社交'
+      }),
+      makeDemoReview(q1, {
+        main: 15500, side: 2500, hours: 206, skillHours: 26, skillJudgement: 'accumulating',
+        cash: 113000, lateNights: 2, exam: 0, topOne: '输出 2 个可展示的数据分析作品',
+        summary: '副业起量但学习时长下降，需要保护学习时间。'
+      }),
+      makeDemoReview(q2, {
+        main: 15000, side: 1500, hours: 214, skillHours: 12, skillJudgement: 'stagnant',
+        cash: 128000, lateNights: 4, exam: 1, topOne: '完成作品集并投递 3 个岗位',
+        summary: '项目加班侵蚀学习时间，身体开始报警。'
+      }),
+      makeDemoReview(q3, {
+        main: 14800, side: 2000, hours: 220, skillHours: 8, skillJudgement: 'consuming',
+        cash: 140000, lateNights: 5, exam: 2, riskJudgement: 'handle',
+        topOne: '补齐作品集，完成一次外部机会接触',
+        summary: '连续两季无实质积累，身体透支明显，需要做决定。'
+      })
+    ];
+    data.goals = [
+      {
+        id: 'g_demo_1', year: date.getFullYear(), title: '把副业做到月入 5000',
+        definitionOfDone: '连续 3 个月副业收入 ≥ 5000 元',
+        keyResults: [
+          { text: '签约 3 个稳定客户', target: 3, current: 2 },
+          { text: '月副业收入 ≥ 5000 元', target: 5000, current: 2000 }
+        ],
+        deadline: date.getFullYear() + '-12-31',
+        antiGoals: '不接与主业时间冲突的项目',
+        budget: { hoursPerWeek: 8, money: 3000 },
+        status: 'active',
+        midYearCheck: { decision: 'continue', at: date.getFullYear() + '-07-15' },
+        createdAt: date.toISOString(), updatedAt: date.toISOString()
+      },
+      {
+        id: 'g_demo_2', year: date.getFullYear(), title: '数据分析能力做到能独立建模',
+        definitionOfDone: '完成 2 个端到端建模项目并写成作品',
+        keyResults: [
+          { text: '完成建模课程', target: 1, current: 1 },
+          { text: '完成 2 个作品', target: 2, current: 0 }
+        ],
+        deadline: date.getFullYear() + '-12-31',
+        antiGoals: '不追求证书数量',
+        budget: { hoursPerWeek: 6, money: 2000 },
+        status: 'active',
+        midYearCheck: { decision: 'continue', at: date.getFullYear() + '-07-15' },
+        createdAt: date.toISOString(), updatedAt: date.toISOString()
+      },
+      {
+        id: 'g_demo_3', year: date.getFullYear(), title: '读完 30 本非专业书',
+        definitionOfDone: '读完 30 本并各写 200 字笔记',
+        keyResults: [{ text: '读完 30 本', target: 30, current: 6 }],
+        deadline: date.getFullYear() + '-12-31',
+        antiGoals: '',
+        budget: { hoursPerWeek: 2, money: 500 },
+        status: 'dropped',
+        dropReason: '与两个核心目标冲突，主动放弃，避免挤压深度工作时间',
+        createdAt: date.toISOString(), updatedAt: date.toISOString()
+      }
+    ];
+    data.bottomLines[0].decisions = [];
+    data.bottomLines[1].decisions = [];
+    data.watchItems = [
+      {
+        id: 'w_demo_1', name: 'AI 应用交付（ToB 工作流）',
+        sources: ['https://example.com/report-1'],
+        signals: ['招聘平台上相关岗位季度环比 +30%', '出现 3 家新创公司完成 A 轮'],
+        skillOverlap: '可迁移：数据分析、需求拆解；缺口：行业 know-how',
+        crowdedness: 2, status: 'researching',
+        researchTrigger: '出现 3 个以上非巨头玩家融资，且我能接下 1 个真实项目',
+        observationStartedAt: isoDate(new Date(date.getFullYear(), date.getMonth() - 2, 1)),
+        nextReviewAt: isoDate(new Date(date.getFullYear(), date.getMonth() + 1, 1)),
+        notes: '优先看交付侧，不碰基础模型训练。',
+        statusHistory: [],
+        createdAt: date.toISOString(), updatedAt: date.toISOString()
+      },
+      {
+        id: 'w_demo_2', name: '个人知识付费（数据分析方向）',
+        sources: [],
+        signals: ['竞品同质化严重，价格战明显', '平台流量向头部集中'],
+        skillOverlap: '可迁移：数据分析；缺口：内容呈现',
+        crowdedness: 5, status: 'observing',
+        researchTrigger: '出现差异化供给或新分发渠道',
+        observationStartedAt: isoDate(new Date(date.getFullYear(), date.getMonth() - 1, 10)),
+        nextReviewAt: isoDate(new Date(date.getFullYear(), date.getMonth() + 1, 10)),
+        notes: '拥挤，先观察，不投入。',
+        statusHistory: [],
+        createdAt: date.toISOString(), updatedAt: date.toISOString()
+      },
+      {
+        id: 'w_demo_3', name: '出海 SaaS 的本地化运营',
+        sources: [],
+        signals: ['海外中小企业数字化预算增长', '本地化交付人才稀缺'],
+        skillOverlap: '可迁移：英语、流程设计；缺口：渠道资源',
+        crowdedness: 2, status: 'observing',
+        researchTrigger: '找到 2 个可验证的需求来源',
+        observationStartedAt: isoDate(new Date(date.getFullYear(), date.getMonth(), 1)),
+        nextReviewAt: isoDate(new Date(date.getFullYear(), date.getMonth() + 1, 1)),
+        notes: '',
+        statusHistory: [],
+        createdAt: date.toISOString(), updatedAt: date.toISOString()
+      }
+    ];
+    data.inputLog = [
+      { date: isoDate(date), minutes: 30 },
+      { date: isoDate(new Date(date.getTime() - 86400000)), minutes: 20 }
+    ];
+    data.lastExportAt = isoDate(new Date(date.getTime() - 42 * 86400000));
+    // 为每次复盘补一份底线状态快照（按时间顺序逐季计算）
+    var chron = data.reviews.slice().sort(function (a, b) { return quarterIndex(a.quarter) - quarterIndex(b.quarter); });
+    chron.forEach(function (review, i) {
+      var subset = Object.assign({}, data, { reviews: chron.slice(0, i + 1) });
+      review.bottomLine = {};
+      runRules(subset, date).forEach(function (r) { review.bottomLine[r.type] = r.status; });
+    });
+    return data;
+  }
+
+  // ---------------------------------------------------------------- 存储
+  function normalizeData(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+    var data = defaultData(new Date());
+    // 保留未知字段，只补齐缺失的默认项
+    var merged = Object.assign({}, data, raw);
+    merged.settings = Object.assign({}, data.settings, raw.settings || {});
+    merged.goals = Array.isArray(raw.goals) ? raw.goals : [];
+    merged.reviews = Array.isArray(raw.reviews) ? raw.reviews.map(normalizeReview) : [];
+    merged.watchItems = Array.isArray(raw.watchItems) ? raw.watchItems : [];
+    merged.inputLog = Array.isArray(raw.inputLog) ? raw.inputLog : [];
+    merged.bottomLines = Array.isArray(raw.bottomLines) && raw.bottomLines.length
+      ? raw.bottomLines
+      : data.bottomLines;
+    return merged;
+  }
+
+  function normalizeReview(r) {
+    var review = Object.assign({
+      id: uid('rv'),
+      status: 'draft',
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      income: {}, skills: { items: [] }, finance: { debts: [] }, risk: { health: {} }
+    }, r || {});
+    review.skills = Object.assign({ items: [] }, review.skills || {});
+    review.finance = Object.assign({ debts: [] }, review.finance || {});
+    review.finance.debts = Array.isArray(review.finance.debts) ? review.finance.debts : [];
+    review.risk = Object.assign({ health: {} }, review.risk || {});
+    review.risk.health = Object.assign({}, review.risk.health || {});
+    review.income = Object.assign({}, review.income || {});
+    return review;
+  }
+
+  function loadData() {
+    try {
+      if (!global.localStorage) return null;
+      var keys = [STORE_KEY].concat(LEGACY_STORE_KEYS);
+      for (var i = 0; i < keys.length; i++) {
+        var raw = global.localStorage.getItem(keys[i]);
+        if (raw) {
+          var parsed = JSON.parse(raw);
+          return normalizeData(parsed);
+        }
+      }
+      return null;
+    } catch (e) {
+      if (global.console) global.console.warn('[qiantu] 读取本地数据失败', e);
+      return null;
+    }
+  }
+
+  function saveData(data) {
+    data.updatedAt = new Date().toISOString();
+    try {
+      if (global.localStorage) {
+        global.localStorage.setItem(STORE_KEY, JSON.stringify(data));
+        // 旧键数据已迁移到新键，清掉避免两份数据分叉
+        LEGACY_STORE_KEYS.forEach(function (key) {
+          try { global.localStorage.removeItem(key); } catch (e) { /* ignore */ }
+        });
+      }
+      return true;
+    } catch (e) {
+      if (global.console) global.console.warn('[qiantu] 保存失败', e);
+      return false;
+    }
+  }
+
+  function removeData() {
+    try {
+      if (!global.localStorage) return;
+      global.localStorage.removeItem(STORE_KEY);
+      LEGACY_STORE_KEYS.forEach(function (key) {
+        try { global.localStorage.removeItem(key); } catch (e) { /* ignore */ }
+      });
+    } catch (e) { /* ignore */ }
+  }
+
+  function exportJSON(data) {
+    var copy = JSON.parse(JSON.stringify(data));
+    copy.exportedAt = new Date().toISOString();
+    return JSON.stringify(copy, null, 2);
+  }
+
+  function importJSON(text) {
+    var parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== 'object') throw new Error('不是有效的 JSON 对象');
+    if (!Array.isArray(parsed.reviews) || !Array.isArray(parsed.bottomLines)) {
+      throw new Error('缺少 reviews / bottomLines，可能不是「前途」的备份文件');
+    }
+    return normalizeData(parsed);
+  }
+
+  // ---------------------------------------------------------------- 辅助
+  function enumLabel(list, value) {
+    var found = (list || []).find(function (item) { return item.value === value; });
+    return found ? found.label : (value || '—');
+  }
+
+  function bjNow() {
+    // 仅用于展示，不做时区换算
+    return new Date();
+  }
+
+  var Core = {
+    STORE_KEY: STORE_KEY,
+    SCHEMA_VERSION: SCHEMA_VERSION,
+    QUARTER_START_MONTH: QUARTER_START_MONTH,
+    STANDARD_MONTH_HOURS: STANDARD_MONTH_HOURS,
+    ENUMS: ENUMS,
+    RULE_META: RULE_META,
+    uid: uid,
+    n: n,
+    nullableNum: nullableNum,
+    round: round,
+    clamp: clamp,
+    fmtMoney: fmtMoney,
+    fmtNum: fmtNum,
+    fmtPct: fmtPct,
+    isoDate: isoDate,
+    todayISO: todayISO,
+    fmtDate: fmtDate,
+    fmtShortDate: fmtShortDate,
+    parseISO: parseISO,
+    daysBetween: daysBetween,
+    startOfWeek: startOfWeek,
+    escapeHtml: escapeHtml,
+    deepGet: deepGet,
+    setByPath: setByPath,
+    quarterOf: quarterOf,
+    quarterLabel: quarterLabel,
+    currentQuarter: currentQuarter,
+    quarterStartDate: quarterStartDate,
+    quarterEndDate: quarterEndDate,
+    parseQuarterLabel: parseQuarterLabel,
+    quarterIndex: quarterIndex,
+    recentQuarterLabels: recentQuarterLabels,
+    quarterRangeText: quarterRangeText,
+    computeIncome: computeIncome,
+    computeFinance: computeFinance,
+    reviewMetrics: reviewMetrics,
+    suggestIncomeJudgement: suggestIncomeJudgement,
+    suggestSkillJudgement: suggestSkillJudgement,
+    suggestFinanceJudgement: suggestFinanceJudgement,
+    suggestRiskJudgement: suggestRiskJudgement,
+    validateReview: validateReview,
+    validateGoal: validateGoal,
+    validateWatchItem: validateWatchItem,
+    completedReviewsChron: completedReviewsChron,
+    ruleQuarterFlag: ruleQuarterFlag,
+    evaluateRule: evaluateRule,
+    runRules: runRules,
+    currentDecision: currentDecision,
+    activeGoals: activeGoals,
+    goalNextAction: goalNextAction,
+    goalProgress: goalProgress,
+    observationDays: observationDays,
+    canWatchTransition: canWatchTransition,
+    weekInputMinutes: weekInputMinutes,
+    backupDays: backupDays,
+    defaultData: defaultData,
+    buildDemoData: buildDemoData,
+    makeDemoReview: makeDemoReview,
+    normalizeData: normalizeData,
+    normalizeReview: normalizeReview,
+    loadData: loadData,
+    saveData: saveData,
+    removeData: removeData,
+    exportJSON: exportJSON,
+    importJSON: importJSON,
+    enumLabel: enumLabel
+  };
+
+  if (typeof module !== 'undefined' && module.exports) module.exports = Core;
+  global.Core = Core;
+})(typeof window !== 'undefined' ? window : global);
+
+</script>
+  <script>
+/* 前途 QIANTU — 界面与交互
+ * 依赖 core.js（window.Core）。所有数据只保存在本机浏览器。
+ */
+(function () {
+  'use strict';
+
+  var C = window.Core;
+  var esc = C.escapeHtml;
+
+  var state = {
+    data: null,
+    demo: false,
+    route: 'home',
+    editingReviewId: null,
+    showCompare: false,
+    radarFilter: 'all',
+    saveTimer: null,
+    savedAt: null
+  };
+
+  // ================================================================ 小工具
+  function $(sel, root) { return (root || document).querySelector(sel); }
+  function $$(sel, root) { return Array.prototype.slice.call((root || document).querySelectorAll(sel)); }
+
+  function nowISO() { return new Date().toISOString(); }
+
+  function goto(hash) {
+    if (location.hash === hash) render();
+    else location.hash = hash;
+  }
+
+  function persist() {
+    if (state.demo) return;
+    C.saveData(state.data);
+  }
+
+  function scheduleSave() {
+    if (state.demo) return;
+    clearTimeout(state.saveTimer);
+    state.saveTimer = setTimeout(function () {
+      C.saveData(state.data);
+      state.savedAt = new Date();
+      var el = $('#autosave-note');
+      if (el) el.textContent = '已自动保存 ' + state.savedAt.toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' });
+    }, 600);
+  }
+
+  function toast(msg, kind) {
+    var root = $('#toast-root');
+    var el = document.createElement('div');
+    el.className = 'toast ' + (kind || 'ok');
+    el.textContent = msg;
+    root.appendChild(el);
+    setTimeout(function () { el.remove(); }, 2800);
+  }
+
+  // ---------------------------------------------------------------- 弹窗
+  function openModal(opts) {
+    var root = $('#modal-root');
+    var overlay = document.createElement('div');
+    overlay.className = 'overlay';
+    overlay.innerHTML =
+      '<div class="modal' + (opts.wide ? ' wide' : '') + '">' +
+        '<div class="modal-head"><h3>' + esc(opts.title || '') + '</h3>' +
+          '<button type="button" class="modal-close" data-modal-close aria-label="关闭">×</button></div>' +
+        '<div class="modal-body">' + (opts.body || '') + '</div>' +
+        (opts.footer ? '<div class="modal-foot">' + opts.footer + '</div>' : '') +
+      '</div>';
+    root.appendChild(overlay);
+    overlay.addEventListener('click', function (e) {
+      if (e.target === overlay) closeModal(overlay);
+    });
+    var closeBtn = overlay.querySelector('[data-modal-close]');
+    if (closeBtn) closeBtn.addEventListener('click', function () { closeModal(overlay); });
+    if (opts.onMount) opts.onMount(overlay);
+    return overlay;
+  }
+
+  function closeModal(overlay) {
+    if (overlay && overlay.parentNode) overlay.remove();
+  }
+
+  function modalRoot() { return $('#modal-root'); }
+
+  function confirmAction(opts) {
+    var ov = openModal({
+      title: opts.title || '确认',
+      body: '<p class="muted" style="line-height:1.7">' + (opts.message || '') + '</p>' +
+        (opts.inputLabel
+          ? '<div class="field mt-3"><label>' + esc(opts.inputLabel) + '</label><input class="input" id="confirm-input" placeholder="' + esc(opts.inputPlaceholder || '') + '"></div>'
+          : ''),
+      footer: '<button type="button" class="btn" data-close>取消</button>' +
+        '<button type="button" class="btn ' + (opts.danger ? 'btn-danger' : 'btn-primary') + '" id="confirm-ok">' + esc(opts.okLabel || '确认') + '</button>',
+      onMount: function (o) {
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#confirm-ok').addEventListener('click', function () {
+          var val = o.querySelector('#confirm-input') ? o.querySelector('#confirm-input').value.trim() : '';
+          if (opts.inputLabel && !val) { toast(opts.inputRequired || '请填写内容', 'error'); return; }
+          closeModal(o);
+          if (opts.onOk) opts.onOk(val);
+        });
+      }
+    });
+    return ov;
+  }
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      var overlays = $$('#modal-root .overlay');
+      if (overlays.length) closeModal(overlays[overlays.length - 1]);
+    }
+  });
+
+  // ---------------------------------------------------------------- 通用渲染件
+  function pageHead(title, sub, actions) {
+    return '<div class="page-head">' +
+      '<div><h1>' + esc(title) + '</h1>' + (sub ? '<div class="sub">' + sub + '</div>' : '') + '</div>' +
+      (actions ? '<div class="head-actions">' + actions + '</div>' : '') +
+    '</div>';
+  }
+
+  function statusTone(status) {
+    if (status === 'green' || status === 'done' || status === 'safe' || status === 'accumulating' || status === 'healthy' || status === 'controllable' || status === 'achieved' || status === 'raised' || status === 'entered' || status === 'maintained') return 'tone-green';
+    if (status === 'yellow' || status === 'warning' || status === 'stagnant' || status === 'optimize' || status === 'handle' || status === 'adjust') return 'tone-yellow';
+    if (status === 'red' || status === 'danger' || status === 'consuming' || status === 'change' || status === 'triggered' || status === 'exit' || status === 'shrink' || status === 'replaceable') return 'tone-red';
+    if (status === 'draft' || status === 'observing' || status === 'unknown') return 'tone-muted';
+    if (status === 'continue' || status === 'active' || status === 'researching') return 'tone-accent';
+    return 'tone-muted';
+  }
+
+  function ruleBadge(status) {
+    var map = { green: '正常', yellow: '接近阈值', red: '已触发', unknown: '未评估' };
+    return '<span class="badge ' + statusTone(status) + '"><span class="dot"></span>' + (map[status] || status) + '</span>';
+  }
+
+  function badge(text, tone) {
+    return '<span class="badge ' + (tone || 'tone-muted') + '"><span class="dot"></span>' + esc(text) + '</span>';
+  }
+
+  function enumBadge(list, value) {
+    var label = C.enumLabel(list, value);
+    return badge(label, statusTone(value));
+  }
+
+  function ksItem(label, value) {
+    return '<span><span class="faint">' + label + '</span> <b>' + value + '</b></span>';
+  }
+
+  // ---------------------------------------------------------------- 输入控件
+  function fieldWrap(label, control, opts) {
+    opts = opts || {};
+    return '<div class="field' + (opts.span ? ' span-2' : '') + '" data-field="' + esc(opts.path || '') + '">' +
+      '<label>' + label + (opts.req ? '<span class="req">*</span>' : '') + '</label>' +
+      control +
+      (opts.hint ? '<div class="hint">' + opts.hint + '</div>' : '') +
+      '</div>';
+  }
+
+  function numControl(path, value, opts) {
+    opts = opts || {};
+    return '<input class="input" type="number" inputmode="decimal" data-path="' + esc(path) + '"' +
+      ' value="' + (value === null || value === undefined ? '' : esc(String(value))) + '"' +
+      (opts.placeholder ? ' placeholder="' + esc(opts.placeholder) + '"' : '') +
+      (opts.step ? ' step="' + opts.step + '"' : '') + ' min="0">';
+  }
+
+  function textControl(path, value, opts) {
+    opts = opts || {};
+    return '<input class="input" type="text" data-path="' + esc(path) + '"' +
+      ' value="' + (value === null || value === undefined ? '' : esc(String(value))) + '"' +
+      (opts.placeholder ? ' placeholder="' + esc(opts.placeholder) + '"' : '') + '>';
+  }
+
+  function dateControl(path, value) {
+    return '<input class="input" type="date" data-path="' + esc(path) + '" value="' + esc(value || '') + '">';
+  }
+
+  function textareaControl(path, value, opts) {
+    opts = opts || {};
+    return '<textarea class="input" data-path="' + esc(path) + '" rows="' + (opts.rows || 3) + '"' +
+      (opts.placeholder ? ' placeholder="' + esc(opts.placeholder) + '"' : '') + '>' + esc(value || '') + '</textarea>';
+  }
+
+  function selectControl(path, value, options, opts) {
+    opts = opts || {};
+    return '<select class="input" data-path="' + esc(path) + '">' +
+      options.map(function (opt) {
+        return '<option value="' + esc(opt.value) + '"' + (opt.value === value ? ' selected' : '') + '>' + esc(opt.label) + '</option>';
+      }).join('') +
+      '</select>';
+  }
+
+  function radiosControl(path, value, options) {
+    var group = 'rg_' + path.replace(/[^a-z0-9]/gi, '_') + '_' + Math.random().toString(36).slice(2, 6);
+    return '<div class="radios">' + options.map(function (opt) {
+      return '<label><input type="radio" name="' + group + '" data-path="' + esc(path) + '" value="' + esc(opt.value) + '"' +
+        (opt.value === value ? ' checked' : '') + '>' + esc(opt.label) + '</label>';
+    }).join('') + '</div>';
+  }
+
+  /** 从容器读取所有 data-path 字段到目标对象（用于弹窗表单） */
+  function readFields(root, target) {
+    $$('[data-path]', root).forEach(function (el) {
+      var path = el.dataset.path;
+      var type = (el.type || '').toLowerCase();
+      if (type === 'radio') {
+        if (el.checked) C.setByPath(target, path, el.value);
+      } else if (type === 'checkbox') {
+        C.setByPath(target, path, el.checked);
+      } else if (type === 'number') {
+        C.setByPath(target, path, C.nullableNum(el.value));
+      } else {
+        C.setByPath(target, path, el.value.trim());
+      }
+    });
+  }
+
+  function showErrors(container, errors) {
+    var box = container.querySelector('.error-list');
+    if (!box) return;
+    if (!errors.length) { box.innerHTML = ''; box.classList.add('hidden'); return; }
+    box.classList.remove('hidden');
+    box.innerHTML = '<div class="alert-title">还有 ' + errors.length + ' 处未完成</div><ul>' +
+      errors.map(function (e) { return '<li>' + esc(e.msg) + '</li>'; }).join('') + '</ul>';
+  }
+
+  function markInvalid(root, errors) {
+    $$('.input.invalid', root).forEach(function (el) { el.classList.remove('invalid'); });
+    errors.forEach(function (e) {
+      var el = root.querySelector('[data-path="' + e.path + '"]');
+      if (el) el.classList.add('invalid');
+    });
+    var first = root.querySelector('.input.invalid');
+    if (first) first.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  // ================================================================ 路由
+  function parseHash() {
+    var h = (location.hash || '').replace(/^#\/?/, '');
+    var parts = h.split('/');
+    return { route: parts[0] || 'home', arg: parts[1] || null };
+  }
+
+  function setNavActive(route) {
+    var key = route === 'review' ? 'reviews' : route;
+    $$('#nav a').forEach(function (a) {
+      a.classList.toggle('active', a.dataset.route === key);
+    });
+    var settings = $('#nav a[data-route="settings"]');
+    if (settings) settings.classList.toggle('active', route === 'settings');
+  }
+
+  function render() {
+    var parsed = parseHash();
+    var view = $('#view');
+    if (!view) return;
+    state.route = parsed.route;
+    if (state.saveTimer) {
+      clearTimeout(state.saveTimer);
+      state.saveTimer = null;
+      if (!state.demo) C.saveData(state.data);
+    }
+    setNavActive(parsed.route);
+    switch (parsed.route) {
+      case 'home': renderHome(view); break;
+      case 'reviews': renderReviews(view); break;
+      case 'review': renderReviewEdit(view, parsed.arg); break;
+      case 'goals': renderGoals(view); break;
+      case 'bottom': renderBottom(view); break;
+      case 'radar': renderRadar(view); break;
+      case 'settings': renderSettings(view); break;
+      default:
+        view.innerHTML = pageHead('页面不存在', '', '<a class="btn" href="#/home">回到总览</a>');
+    }
+    window.scrollTo(0, 0);
+  }
+
+  window.addEventListener('hashchange', render);
+
+  // ================================================================ 总览（首页）
+  function getRules() { return C.runRules(state.data); }
+
+  function renderHome(view) {
+    var data = state.data;
+    var now = new Date();
+    var q = C.currentQuarter(now, data.settings.quarterStartMonth);
+    var rules = getRules();
+    var done = C.completedReviewsChron(data);
+    var latest = done[done.length - 1] || null;
+    var currentDone = data.reviews.filter(function (r) { return r.quarter === q.label && r.status === 'done'; })[0] || null;
+    var currentDraft = data.reviews.filter(function (r) { return r.quarter === q.label && r.status === 'draft'; })[0] || null;
+    var active = C.activeGoals(data.goals, q.fy);
+    var weekMin = C.weekInputMinutes(data, now);
+    var weekGoal = C.n(data.settings.weeklyInputGoalMinutes);
+    var backupDays = C.backupDays(data, now);
+    var activeRules = rules.filter(function (r) { return r.enabled; });
+    var redCount = activeRules.filter(function (r) { return r.status === 'red'; }).length;
+    var yellowCount = activeRules.filter(function (r) { return r.status === 'yellow'; }).length;
+    var greenCount = activeRules.filter(function (r) { return r.status === 'green'; }).length;
+    var radarItems = data.watchItems || [];
+    var radarDue = radarItems.filter(function (w) { return w.nextReviewAt && w.nextReviewAt <= C.todayISO() && (w.status === 'observing' || w.status === 'researching'); });
+
+    var html = '';
+    var headAction = currentDone
+      ? '<a class="btn" href="#/review/' + currentDone.id + '">查看本季复盘</a>'
+      : (currentDraft
+        ? '<a class="btn btn-primary" href="#/review/' + currentDraft.id + '">继续填写本季复盘</a>'
+        : '<button class="btn btn-primary" data-action="new-review">开始本季复盘</button>');
+    html += pageHead('总览', esc(q.fy + ' 年 · 第 ' + q.q + ' 季度') + ' · ' + esc(q.start) + ' – ' + esc(q.end), headAction);
+
+    // ---- 提示区
+    var alerts = [];
+    if (!currentDone) {
+      alerts.push(alertBlock('blue', currentDraft ? '本季复盘草稿未提交' : '本季复盘未完成',
+        q.label + ' 还没有完成的复盘记录。这是框架唯一的硬性节奏：用 45 分钟把四本账过一遍。',
+        currentDraft
+          ? '<a class="btn btn-sm btn-primary" href="#/review/' + currentDraft.id + '">继续填写</a>'
+          : '<button class="btn btn-sm btn-primary" data-action="new-review">开始复盘</button>'));
+    }
+    rules.forEach(function (rule) {
+      if (!rule.enabled) return;
+      if (rule.status === 'red' && !rule.decision) {
+        var lastFlag = (rule.flags || []).filter(function (f) { return f.bad; }).slice(-1)[0];
+        alerts.push(alertBlock('red', '已触发底线：' + rule.title,
+          (lastFlag ? lastFlag.detail + '。' : '') + '按你预设的规则，现在需要做决定，而不是继续观察。',
+          '<button class="btn btn-sm" data-action="open-decision" data-id="' + rule.ruleId + '">填写决策卡</button>'));
+      } else if (rule.decisionOverdue) {
+        alerts.push(alertBlock('yellow', '底线决策到期待复查：' + rule.title,
+          '决策截止日 ' + C.fmtDate(rule.decision.deadline) + ' 已过，请复查执行情况。',
+          '<a class="btn btn-sm" href="#/bottom">去底线页</a>'));
+      }
+    });
+    var month = now.getMonth() + 1;
+    if (month >= 7 && month <= 9) {
+      var needMidYear = active.some(function (g) { return !g.midYearCheck; });
+      if (needMidYear) {
+        alerts.push(alertBlock('blue', '年中校准（7 月）', '年度目标需要一次校准：继续、降级为维持，或正式放弃。',
+          '<button class="btn btn-sm" data-action="btn" data-href="#/goals">去目标页</button>'));
+      }
+    }
+    if (done.length > 0 && (backupDays === null || backupDays > 90)) {
+      alerts.push(alertBlock('muted', '数据备份提醒',
+        backupDays === null ? '还没有导出过备份。数据只存在这台电脑的浏览器里。' : '上次备份是 ' + backupDays + ' 天前。',
+        '<button class="btn btn-sm" data-action="export-data">导出备份</button>'));
+    }
+    var olderActive = data.goals.filter(function (g) {
+      return (g.status === 'active' || g.status === 'maintained') && g.year < q.fy;
+    });
+    if (olderActive.length) {
+      alerts.push(alertBlock('yellow', '上一年度还有未结项目标',
+        olderActive.length + ' 个 ' + olderActive[0].year + ' 年目标仍未结项，请先结项或归档，避免目标跨年堆积。',
+        '<a class="btn btn-sm" href="#/goals">去处理</a>'));
+    }
+    html += alerts.join('');
+
+    // ---- 四宫格
+    html += '<div class="grid grid-4">' +
+      '<div class="card"><div class="stat-label">年度核心目标</div><div class="stat-value">' + active.length + ' / 2</div>' +
+        '<div class="stat-sub">' + (active.length ? '下一步：' + esc(C.goalNextAction(active[0])) : '还没有立项') + '</div></div>' +
+      '<div class="card"><div class="stat-label">本季唯一最重要的事</div>' +
+        '<div class="stat-sub" style="font-size:14px;color:var(--text);margin-top:2px;line-height:1.5">' +
+        (currentDone && currentDone.topOne ? esc(currentDone.topOne) : '—') + '</div>' +
+        '<div class="stat-sub">' + (currentDone ? '来自 ' + q.label + ' 复盘' : '完成复盘后自动带出') + '</div></div>' +
+      '<div class="card"><div class="stat-label">底线状态</div><div class="stat-value">' + (redCount ? '<span style="color:var(--red)">' + redCount + ' 项触发</span>' : (yellowCount ? '<span style="color:var(--yellow)">' + yellowCount + ' 项接近</span>' : '正常')) + '</div>' +
+        '<div class="stat-sub">红 ' + redCount + ' · 黄 ' + yellowCount + ' · 绿 ' + greenCount + '</div></div>' +
+      '<div class="card"><div class="stat-label">本周信息定投</div><div class="stat-value">' + weekMin + ' <span style="font-size:13px;color:var(--muted)">/ ' + weekGoal + ' 分</span></div>' +
+        '<div class="bar mt-2"><i style="width:' + Math.min(100, weekGoal ? (weekMin / weekGoal) * 100 : 0) + '%"></i></div>' +
+        '<div class="stat-sub"><button class="btn btn-xs" data-action="log-input">+30 分钟</button></div></div>' +
+    '</div>';
+
+    // ---- 年度目标
+    html += '<div class="card section-gap"><div class="card-title"><h2>年度目标（' + active.length + ' / 2）</h2>' +
+      '<div class="card-actions"><a class="btn btn-sm btn-ghost" href="#/goals">管理目标</a></div></div>';
+    if (!active.length) {
+      html += '<div class="empty" style="padding:22px"><div class="empty-title">还没有设定今年目标</div>' +
+        '<div class="small">每年只定 1–2 个核心成长目标，多出来的进放弃清单。</div>' +
+        '<a class="btn mt-3" href="#/goals">去立项</a></div>';
+    } else {
+      html += active.map(function (g) {
+        var prog = C.goalProgress(g);
+        return '<div class="flex-between" style="padding:10px 0;border-bottom:1px solid var(--border)">' +
+          '<div style="min-width:0"><div style="font-weight:600">' + esc(g.title) + '</div>' +
+          '<div class="small muted" style="margin-top:2px">下一步：' + esc(C.goalNextAction(g)) + '</div></div>' +
+          '<div class="flex-gap">' + enumBadge(C.ENUMS.goalStatus, g.status) +
+          (prog != null ? '<span class="small muted tabular">' + Math.round(prog * 100) + '%</span>' : '') +
+          '</div></div>';
+      }).join('');
+    }
+    html += '</div>';
+
+    // ---- 底线 + 雷达
+    html += '<div class="grid grid-2 section-gap">';
+    html += '<div class="card"><div class="card-title"><h2>底线</h2><a class="btn btn-sm btn-ghost" href="#/bottom">规则设置</a></div>';
+    html += activeRules.map(function (rule) {
+      var lastFlag = (rule.flags || []).slice(-1)[0];
+      return '<div class="flex-between" style="padding:8px 0;border-bottom:1px solid var(--border)">' +
+        '<div style="min-width:0"><div>' + esc(rule.title) + '</div>' +
+        '<div class="tiny faint" style="margin-top:2px">' + esc(lastFlag ? lastFlag.detail : '还没有已完成的复盘数据') + '</div></div>' +
+        ruleBadge(rule.status) + '</div>';
+    }).join('');
+    html += '</div>';
+
+    var researching = radarItems.filter(function (w) { return w.status === 'researching'; });
+    html += '<div class="card"><div class="card-title"><h2>赛道雷达</h2><a class="btn btn-sm btn-ghost" href="#/radar">打开雷达</a></div>' +
+      '<div class="flex-gap" style="margin-bottom:12px">' +
+        badge('观察中 ' + radarItems.filter(function (w) { return w.status === 'observing'; }).length, 'tone-muted') +
+        badge('研究中 ' + researching.length, 'tone-accent') +
+        badge('已进入 ' + radarItems.filter(function (w) { return w.status === 'entered'; }).length, 'tone-green') +
+      '</div>' +
+      (radarDue.length
+        ? '<div class="small" style="color:var(--yellow)">' + radarDue.length + ' 条到回看时间：' + esc(radarDue.slice(0, 3).map(function (w) { return w.name; }).join('、')) + '</div>'
+        : '<div class="small muted">' + (radarItems.length ? '暂无到期待回看的条目。' : '还没有观察条目。') + '</div>') +
+      '<div class="small muted mt-3">新赛道先在「观察中」待满 30 天再升级，避免 FOMO 决策。</div>' +
+    '</div>';
+    html += '</div>';
+
+    // ---- 上次复盘
+    if (latest) {
+      html += '<div class="card section-gap"><div class="card-title"><h2>上次复盘 · ' + esc(latest.quarter) + '</h2>' +
+        '<div class="card-actions">' + enumBadge(C.ENUMS.conclusion, latest.conclusion) + '</div></div>' +
+        '<div class="small muted">' + esc(latest.oneLineSummary || '') + '</div>' +
+        '<div class="mt-3 small"><span class="faint">下季 Top1：</span>' + esc(latest.topOne || '—') + '</div></div>';
+    }
+
+    view.innerHTML = html;
+  }
+
+  function alertBlock(tone, title, desc, actions) {
+    return '<div class="alert alert-' + tone + '"><div class="alert-main">' +
+      '<div class="alert-title">' + esc(title) + '</div>' +
+      '<div class="alert-desc">' + desc + '</div></div>' +
+      (actions ? '<div class="alert-actions">' + actions + '</div>' : '') + '</div>';
+  }
+
+  // ================================================================ 季度复盘：列表
+  function renderReviews(view) {
+    var data = state.data;
+    var reviews = data.reviews.slice().sort(function (a, b) { return C.quarterIndex(b.quarter) - C.quarterIndex(a.quarter); });
+    var done = C.completedReviewsChron(data);
+    var html = pageHead('季度复盘', '每季度一次，四本账 + 一个结论。已完成 ' + done.length + ' 个季度',
+      '<button class="btn btn-primary" data-action="new-review">新建复盘</button>');
+
+    if (!reviews.length) {
+      html += '<div class="card"><div class="empty"><div class="empty-title">还没有复盘记录</div>' +
+        '<div class="small">复盘只要做一件事：用固定字段把四本账过一遍，最后写下结论。</div>' +
+        '<button class="btn btn-primary mt-3" data-action="new-review">开始第一次复盘</button></div></div>';
+    } else {
+      html += '<div class="card"><div class="table-wrap"><table class="table"><thead><tr>' +
+        '<th>季度</th><th>状态</th><th>结论</th><th class="num">有效时薪</th><th class="num">安全垫</th><th>底线</th><th>更新时间</th><th class="actions">操作</th>' +
+        '</tr></thead><tbody>';
+      html += reviews.map(function (r) {
+        var m = C.reviewMetrics(r);
+        var status = r.status === 'done' ? badge('已完成', 'tone-green') : badge('草稿', 'tone-muted');
+        var bl = r.bottomLine || {};
+        var blHtml = ['growth', 'health', 'salary'].map(function (k) {
+          var v = bl[k];
+          return v ? '<span class="badge ' + statusTone(v) + '" style="padding:1px 6px;font-size:11px">' + ({ growth: '成长', health: '健康', salary: '薪资' }[k]) + '</span>' : '';
+        }).join(' ');
+        return '<tr>' +
+          '<td><a href="#/review/' + r.id + '"><b>' + esc(r.quarter) + '</b></a>' +
+            '<div class="tiny faint">' + esc(C.quarterRangeText(r.quarter)) + '</div></td>' +
+          '<td>' + status + '</td>' +
+          '<td>' + (r.conclusion ? enumBadge(C.ENUMS.conclusion, r.conclusion) : '—') + '</td>' +
+          '<td class="num">' + (m.effectiveHourly != null ? C.fmtMoney(m.effectiveHourly) : '—') + '</td>' +
+          '<td class="num">' + (m.runwayMonths != null ? m.runwayMonths.toFixed(1) + ' 月' : '—') + '</td>' +
+          '<td>' + (blHtml || '—') + '</td>' +
+          '<td class="muted small">' + esc(C.fmtShortDate(r.updatedAt || r.createdAt)) + '</td>' +
+          '<td class="actions">' +
+            '<a class="btn btn-sm btn-ghost" href="#/review/' + r.id + '">' + (r.status === 'done' ? '查看' : '继续填写') + '</a> ' +
+            '<button class="btn btn-sm btn-ghost" data-action="delete-review" data-id="' + r.id + '">删除</button>' +
+          '</td></tr>';
+      }).join('');
+      html += '</tbody></table></div></div>';
+    }
+
+    // ---- 历史对比
+    if (done.length >= 2) {
+      html += '<div class="card section-gap"><div class="card-title"><h2>历史对比（最近 4 个完成季度）</h2>' +
+        '<div class="card-actions"><button class="btn btn-sm btn-ghost" data-action="toggle-compare">' + (state.showCompare ? '收起' : '展开') + '</button></div></div>';
+      if (state.showCompare) {
+        html += compareTable(done.slice(-4));
+      } else {
+        html += '<div class="small muted">并排看关键数字的变化，比记住“上季感觉如何”可靠。</div>';
+      }
+      html += '</div>';
+    }
+
+    view.innerHTML = html;
+  }
+
+  function compareTable(reviews) {
+    var rows = [
+      { label: '月均总收入', get: function (m) { return C.fmtMoney(m.income.total); } },
+      { label: '有效时薪', get: function (m) { return m.effectiveHourly != null ? C.fmtMoney(m.effectiveHourly) : '—'; } },
+      { label: '技能投入', get: function (m) { return C.fmtNum(m.skillHours, 0) + ' h'; } },
+      { label: '证据条数', get: function (m) { return m.evidenceCount + ' 条'; } },
+      { label: '现金存款', get: function (m) { return C.fmtMoney(m.finance.cash); } },
+      { label: '储蓄率', get: function (m) { return m.savingRate != null ? C.fmtPct(m.savingRate) : '—'; } },
+      { label: '安全垫', get: function (m) { return m.runwayMonths != null ? m.runwayMonths.toFixed(1) + ' 月' : '—'; } },
+      { label: '主业收益判断', get: function (m, r) { return C.enumLabel(C.ENUMS.incomeJudgement, r.income.judgement); } },
+      { label: '技能判断', get: function (m, r) { return C.enumLabel(C.ENUMS.skillJudgement, r.skills.judgement); } },
+      { label: '风险判断', get: function (m, r) { return C.enumLabel(C.ENUMS.riskJudgement, r.risk.judgement); } }
+    ];
+    var html = '<div class="table-wrap"><table class="table"><thead><tr><th>指标</th>' +
+      reviews.map(function (r) { return '<th class="num">' + esc(r.quarter) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    rows.forEach(function (row) {
+      html += '<tr><td class="muted">' + row.label + '</td>' + reviews.map(function (r) {
+        return '<td class="num">' + esc(row.get(C.reviewMetrics(r), r)) + '</td>';
+      }).join('') + '</tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+  }
+
+  // ---------------------------------------------------------------- 新建复盘
+  function latestDoneBefore(label) {
+    var target = C.quarterIndex(label);
+    var before = C.completedReviewsChron(state.data).filter(function (r) { return C.quarterIndex(r.quarter) < target; });
+    return before[before.length - 1] || null;
+  }
+
+  function createReview(quarterLabel) {
+    var prev = latestDoneBefore(quarterLabel);
+    var settings = state.data.settings;
+    var review = {
+      id: C.uid('rv'),
+      quarter: quarterLabel,
+      status: 'draft',
+      createdAt: nowISO(),
+      updatedAt: nowISO(),
+      income: {
+        main: prev ? prev.income.main : null,
+        side: prev ? prev.income.side : null,
+        other: prev ? prev.income.other : 0,
+        monthlyHours: prev ? prev.income.monthlyHours : null,
+        marketMonthlyMedian: (prev && prev.income.marketMonthlyMedian) || settings.marketMedianSalary || null,
+        salaryEvent: '',
+        judgement: ''
+      },
+      skills: {
+        hours: null,
+        items: [{ name: '', level: 3, evidence: '', keep: true }],
+        transferability: prev ? prev.skills.transferability : '',
+        judgement: ''
+      },
+      finance: {
+        cash: prev ? prev.finance.cash : null,
+        monthlyExpense: prev ? prev.finance.monthlyExpense : null,
+        debts: prev && prev.finance.debts ? JSON.parse(JSON.stringify(prev.finance.debts)) : [],
+        judgement: ''
+      },
+      risk: {
+        socialSecurity: prev ? prev.risk.socialSecurity : 'continuous',
+        socialSecurityCheckedAt: C.todayISO(),
+        health: {
+          abnormalExamItems: prev ? prev.risk.health.abnormalExamItems : 0,
+          workoutPerWeek: prev ? prev.risk.health.workoutPerWeek : null,
+          lateNightsPerWeek: prev ? prev.risk.health.lateNightsPerWeek : null
+        },
+        careerRisk: prev ? prev.risk.careerRisk : '',
+        legalNotes: '',
+        judgement: ''
+      },
+      conclusion: '',
+      topOne: '',
+      abandonList: '',
+      oneLineSummary: ''
+    };
+    state.data.reviews.push(review);
+    persist();
+    goto('#/review/' + review.id);
+    return review;
+  }
+
+  function openQuarterPicker() {
+    var candidates = C.recentQuarterLabels(6, new Date(), state.data.settings.quarterStartMonth).filter(function (label) {
+      return !state.data.reviews.some(function (r) { return r.quarter === label; });
+    });
+    if (!candidates.length) { toast('最近 6 个季度都已有复盘记录', 'error'); return; }
+    var body = '<div class="small muted" style="margin-bottom:12px">选择要复盘的季度（只能补最近 6 个季度）：</div>' +
+      '<div class="stack">' + candidates.map(function (label, i) {
+        return '<label class="flex-gap" style="display:flex;padding:10px 12px;border:1px solid var(--border);border-radius:10px;cursor:pointer">' +
+          '<input type="radio" name="pick-quarter" value="' + label + '"' + (i === 0 ? ' checked' : '') + ' style="accent-color:var(--accent)">' +
+          '<b>' + esc(label) + '</b><span class="small muted">' + esc(C.quarterRangeText(label)) + '</span></label>';
+      }).join('') + '</div>';
+    openModal({
+      title: '新建季度复盘',
+      body: body,
+      footer: '<button type="button" class="btn" data-close>取消</button><button type="button" class="btn btn-primary" id="pick-ok">开始复盘</button>',
+      onMount: function (ov) {
+        ov.querySelector('[data-close]').addEventListener('click', function () { closeModal(ov); });
+        ov.querySelector('#pick-ok').addEventListener('click', function () {
+          var picked = ov.querySelector('input[name="pick-quarter"]:checked');
+          if (!picked) return;
+          closeModal(ov);
+          createReview(picked.value);
+        });
+      }
+    });
+  }
+
+  // ================================================================ 季度复盘：录入
+  function getReview(id) { return state.data.reviews.filter(function (r) { return r.id === id; })[0] || null; }
+
+  function renderReviewEdit(view, id) {
+    var review = getReview(id);
+    if (!review) { toast('复盘记录不存在', 'error'); goto('#/reviews'); return; }
+    state.editingReviewId = review.id;
+    var data = state.data;
+    var q = C.parseQuarterLabel(review.quarter);
+    var statusBadge = review.status === 'done' ? badge('已完成', 'tone-green') : badge('草稿', 'tone-muted');
+    var prev = latestDoneBefore(review.quarter);
+
+    var html = pageHead(review.quarter + ' 复盘', (q ? esc(q.fy + ' 年 · 第 ' + q.q + ' 季度') : '') + ' · ' + esc(C.quarterRangeText(review.quarter)),
+      '<button class="btn btn-ghost" data-action="back-reviews">返回列表</button>' + statusBadge);
+
+    html += '<div class="hidden error-list" id="form-errors"></div>';
+
+    // ---------- 1 主业收益
+    html += '<div class="section"><div class="section-head"><span class="section-num">1</span><h2>主业收益</h2>' +
+      '<span class="section-hint">' + (prev ? '已带出 ' + prev.quarter + ' 数据，请更新' : '首次录入') + '</span></div>' +
+      '<div class="form-grid">' +
+      fieldWrap('主业月均收入', numControl('income.main', review.income.main), { req: true }) +
+      fieldWrap('副业月均收入', numControl('income.side', review.income.side), { req: true }) +
+      fieldWrap('其他收入', numControl('income.other', review.income.other), { req: true }) +
+      fieldWrap('月均总工时（含通勤/加班）', numControl('income.monthlyHours', review.income.monthlyHours), { req: true, hint: '用于计算有效时薪，估算即可' }) +
+      fieldWrap('市场同岗位月薪中位数', numControl('income.marketMonthlyMedian', review.income.marketMonthlyMedian), { hint: '每季度手动更新一次，薪资底线规则要用' }) +
+      fieldWrap('涨薪/跳槽节点', selectControl('income.salaryEvent', review.income.salaryEvent, C.ENUMS.salaryEvent), { req: true }) +
+      fieldWrap('收益判断', radiosControl('income.judgement', review.income.judgement, C.ENUMS.incomeJudgement) + '<div class="hint" id="sug-income"></div>', { span: true, req: true }) +
+      '</div>' +
+      '<div class="calc" id="calc-income"></div></div>';
+
+    // ---------- 2 技能积累
+    html += '<div class="section"><div class="section-head"><span class="section-num">2</span><h2>技能积累</h2>' +
+      '<span class="section-hint">判断标准：有证据才算积累</span></div>' +
+      '<div class="form-grid">' +
+      fieldWrap('本季投入时长（小时）', numControl('skills.hours', review.skills.hours), { req: true }) +
+      fieldWrap('可迁移性', selectControl('skills.transferability', review.skills.transferability, C.ENUMS.transferability), { req: true }) +
+      '</div>' +
+      '<div class="field span-2"><label>技能条目（建议 1–3 条）</label>' +
+        '<div class="rows" id="skill-rows">' + skillRowsHtml(review) + '</div>' +
+        '<div class="mt-2"><button type="button" class="btn btn-sm" data-form-action="add-skill">+ 添加技能</button></div>' +
+      '</div>' +
+      fieldWrap('技能积累判断', radiosControl('skills.judgement', review.skills.judgement, C.ENUMS.skillJudgement) + '<div class="hint" id="sug-skills"></div>', { span: true, req: true }) +
+      '<div class="calc" id="calc-skills"></div></div>';
+
+    // ---------- 3 存款与负债
+    html += '<div class="section"><div class="section-head"><span class="section-num">3</span><h2>存款与负债</h2></div>' +
+      '<div class="form-grid">' +
+      fieldWrap('现金存款（可动用）', numControl('finance.cash', review.finance.cash), { req: true }) +
+      fieldWrap('月均总支出', numControl('finance.monthlyExpense', review.finance.monthlyExpense), { req: true, hint: '安全垫 = 存款 ÷ 月均支出，用总支出偏保守' }) +
+      '</div>' +
+      '<div class="field span-2"><label>负债（没有可留空）</label>' +
+        '<div class="rows" id="debt-rows">' + debtRowsHtml(review) + '</div>' +
+        '<div class="mt-2"><button type="button" class="btn btn-sm" data-form-action="add-debt">+ 添加负债</button></div>' +
+      '</div>' +
+      fieldWrap('存款判断', radiosControl('finance.judgement', review.finance.judgement, C.ENUMS.financeJudgement) + '<div class="hint" id="sug-finance"></div>', { span: true, req: true }) +
+      '<div class="calc" id="calc-finance"></div></div>';
+
+    // ---------- 4 风险
+    html += '<div class="section"><div class="section-head"><span class="section-num">4</span><h2>风险</h2>' +
+      '<span class="section-hint">社保、身体、职业、合同</span></div>' +
+      '<div class="form-grid">' +
+      fieldWrap('社保/公积金', selectControl('risk.socialSecurity', review.risk.socialSecurity, C.ENUMS.socialSecurity), { req: true }) +
+      fieldWrap('最近核对日期', dateControl('risk.socialSecurityCheckedAt', review.risk.socialSecurityCheckedAt), { req: true }) +
+      fieldWrap('体检新增异常项', numControl('risk.health.abnormalExamItems', review.risk.health.abnormalExamItems), { req: true }) +
+      fieldWrap('周均运动次数', numControl('risk.health.workoutPerWeek', review.risk.health.workoutPerWeek), { req: true }) +
+      fieldWrap('周均熬夜天数', numControl('risk.health.lateNightsPerWeek', review.risk.health.lateNightsPerWeek), { req: true }) +
+      fieldWrap('职业风险', selectControl('risk.careerRisk', review.risk.careerRisk, C.ENUMS.careerRisk), { req: true }) +
+      fieldWrap('合同与法律备注', textareaControl('risk.legalNotes', review.risk.legalNotes, { rows: 2, placeholder: '竞业、期权、欠薪、合同到期等，没有可留空' }), { span: true }) +
+      fieldWrap('风险判断', radiosControl('risk.judgement', review.risk.judgement, C.ENUMS.riskJudgement) + '<div class="hint" id="sug-risk"></div>', { span: true, req: true }) +
+      '</div></div>';
+
+    // ---------- 5 结论
+    html += '<div class="section"><div class="section-head"><span class="section-num">5</span><h2>结论</h2>' +
+      '<span class="section-hint">没有结论的复盘不算完成</span></div>' +
+      fieldWrap('本季结论', radiosControl('conclusion', review.conclusion, C.ENUMS.conclusion) +
+        '<div class="hint">选「启动退出评估」会提示你在底线页填写决策卡。</div>', { span: true, req: true }) +
+      '<div class="form-grid">' +
+      fieldWrap('本季一句话总结', textareaControl('oneLineSummary', review.oneLineSummary, { rows: 2, placeholder: '例如：收入稳定但技能证据不足，下季重点是作品化。' }), { span: true, req: true }) +
+      fieldWrap('下季唯一最重要的事（Top 1）', textControl('topOne', review.topOne, { placeholder: '只能写一件事' }), { span: true, req: true }) +
+      fieldWrap('本季放弃清单', textareaControl('abandonList', review.abandonList, { rows: 2, placeholder: '做了什么但其实不该做的，或主动放弃的事' }), { span: true }) +
+      '</div>' +
+      '<div class="calc">提交后会自动计算底线状态：' + ruleBadge('unknown') + ' 成长 · ' + ruleBadge('unknown') + ' 健康 · ' + ruleBadge('unknown') + ' 薪资</div></div>';
+
+    // ---------- 操作条
+    html += '<div class="action-bar">' +
+      '<div class="left"><span id="autosave-note">' + (state.demo ? '演示模式：修改不会保存' : '编辑内容会自动保存') + '</span></div>' +
+      '<button class="btn btn-ghost" data-action="delete-review" data-id="' + review.id + '">删除</button>' +
+      '<button class="btn" data-action="back-reviews">返回列表</button>' +
+      '<button class="btn btn-primary" data-form-action="submit-review">提交完成</button>' +
+      '</div>';
+
+    view.innerHTML = html;
+    refreshReviewCalc(review);
+  }
+
+  function skillRowsHtml(review) {
+    var items = review.skills.items || [];
+    if (!items.length) return '<div class="hint">还没有技能条目。建议每季只记录 1–3 个真正在练的技能。</div>';
+    return items.map(function (it, i) {
+      var levels = [1, 2, 3, 4, 5].map(function (lv) {
+        return '<option value="' + lv + '"' + (C.n(it.level) === lv ? ' selected' : '') + '>L' + lv + '</option>';
+      }).join('');
+      return '<div class="row-line skill">' +
+        '<input class="input" data-path="skills.items.' + i + '.name" value="' + esc(it.name) + '" placeholder="技能名">' +
+        '<select class="input" data-path="skills.items.' + i + '.level" title="等级">' + levels + '</select>' +
+        '<input class="input" data-path="skills.items.' + i + '.evidence" value="' + esc(it.evidence) + '" placeholder="证据：作品 / 证书 / 成果">' +
+        '<label class="check-line"><input type="checkbox" data-path="skills.items.' + i + '.keep"' + (it.keep !== false ? ' checked' : '') + '>继续</label>' +
+        '<button type="button" class="rm" data-form-action="rm-skill" data-index="' + i + '">×</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function debtRowsHtml(review) {
+    var debts = review.finance.debts || [];
+    if (!debts.length) return '<div class="hint">没有负债可留空。负债不是羞耻，是必须算进安全垫的变量。</div>';
+    return debts.map(function (d, i) {
+      var opts = C.ENUMS.debtType.map(function (t) {
+        return '<option value="' + t.value + '"' + (t.value === d.type ? ' selected' : '') + '>' + esc(t.label) + '</option>';
+      }).join('');
+      return '<div class="row-line debt">' +
+        '<select class="input" data-path="finance.debts.' + i + '.type">' + opts + '</select>' +
+        '<input class="input" data-path="finance.debts.' + i + '.balance" type="number" value="' + (d.balance == null ? '' : esc(String(d.balance))) + '" placeholder="余额" min="0">' +
+        '<input class="input" data-path="finance.debts.' + i + '.monthly" type="number" value="' + (d.monthly == null ? '' : esc(String(d.monthly))) + '" placeholder="月供" min="0">' +
+        '<input class="input" data-path="finance.debts.' + i + '.rate" type="number" value="' + (d.rate == null ? '' : esc(String(d.rate))) + '" placeholder="利率%" step="0.01" min="0">' +
+        '<button type="button" class="rm" data-form-action="rm-debt" data-index="' + i + '">×</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  function onReviewInput(e) {
+    var t = e.target;
+    if (!t.dataset || t.dataset.path == null) return;
+    var review = getReview(state.editingReviewId);
+    if (!review) return;
+    var type = (t.type || '').toLowerCase();
+    var value;
+    if (type === 'radio') { if (!t.checked) return; value = t.value; }
+    else if (type === 'checkbox') value = t.checked;
+    else if (type === 'number') value = C.nullableNum(t.value);
+    else value = t.value;
+    C.setByPath(review, t.dataset.path, value);
+    review.updatedAt = nowISO();
+    t.classList.remove('invalid');
+    scheduleSave();
+    refreshReviewCalc(review);
+  }
+
+  function onReviewClick(e) {
+    var btn = e.target.closest('[data-form-action]');
+    if (!btn) return;
+    var review = getReview(state.editingReviewId);
+    if (!review) return;
+    var action = btn.dataset.formAction;
+    if (action === 'add-skill') {
+      if ((review.skills.items || []).length >= 5) { toast('技能条目最多 5 条', 'error'); return; }
+      review.skills.items.push({ name: '', level: 3, evidence: '', keep: true });
+      rerenderRow('#skill-rows', skillRowsHtml(review));
+      refreshReviewCalc(review); scheduleSave();
+    } else if (action === 'rm-skill') {
+      review.skills.items.splice(parseInt(btn.dataset.index, 10), 1);
+      rerenderRow('#skill-rows', skillRowsHtml(review));
+      refreshReviewCalc(review); scheduleSave();
+    } else if (action === 'add-debt') {
+      review.finance.debts.push({ type: 'mortgage', balance: null, monthly: null, rate: null });
+      rerenderRow('#debt-rows', debtRowsHtml(review));
+      refreshReviewCalc(review); scheduleSave();
+    } else if (action === 'rm-debt') {
+      review.finance.debts.splice(parseInt(btn.dataset.index, 10), 1);
+      rerenderRow('#debt-rows', debtRowsHtml(review));
+      refreshReviewCalc(review); scheduleSave();
+    } else if (action === 'suggest') {
+      var kind = btn.dataset.suggest;
+      var path = { income: 'income.judgement', skills: 'skills.judgement', finance: 'finance.judgement', risk: 'risk.judgement' }[kind];
+      var m = C.reviewMetrics(review, state.data.settings);
+      var val = m.suggestions[kind];
+      if (!path || !val) return;
+      var radio = document.querySelector('input[data-path="' + path + '"][value="' + val + '"]');
+      C.setByPath(review, path, val);
+      if (radio) radio.checked = true;
+      scheduleSave();
+      refreshReviewCalc(review);
+      toast('已按数据建议选择');
+    } else if (action === 'submit-review') {
+      submitReview(review);
+    }
+  }
+
+  function rerenderRow(selector, html) {
+    var el = $(selector);
+    if (el) el.innerHTML = html;
+  }
+
+  function suggestionHtml(kind, suggestion, review) {
+    if (!suggestion) return '<span class="faint">数据不足，无法给出建议</span>';
+    var label = kind === 'income' ? C.enumLabel(C.ENUMS.incomeJudgement, suggestion)
+      : kind === 'skills' ? C.enumLabel(C.ENUMS.skillJudgement, suggestion)
+      : kind === 'finance' ? C.enumLabel(C.ENUMS.financeJudgement, suggestion)
+      : C.enumLabel(C.ENUMS.riskJudgement, suggestion);
+    return '按数据建议：<b style="color:var(--text)">' + esc(label) + '</b> ' +
+      '<button type="button" class="btn btn-xs" data-form-action="suggest" data-suggest="' + kind + '">应用</button>';
+  }
+
+  function refreshReviewCalc(review) {
+    if (!review || !document.getElementById('calc-income')) return;
+    var m = C.reviewMetrics(review, state.data.settings);
+    var inc = m.income;
+    var fin = m.finance;
+    var incomeCalc = $('#calc-income');
+    if (incomeCalc) {
+      incomeCalc.innerHTML =
+        ksItem('月均总收入', C.fmtMoney(inc.total)) +
+        ksItem('有效时薪', inc.effectiveHourly != null ? C.fmtMoney(inc.effectiveHourly) : '—') +
+        (inc.structure ? ksItem('收入结构', C.fmtPct(inc.structure.main, 0) + ' / ' + C.fmtPct(inc.structure.side, 0) + ' / ' + C.fmtPct(inc.structure.other, 0) + '（主业/副业/其他）') : '');
+    }
+    var skillsCalc = $('#calc-skills');
+    if (skillsCalc) {
+      skillsCalc.innerHTML =
+        ksItem('技能投入', C.fmtNum(m.skillHours, 0) + ' h') +
+        ksItem('有证据条目', m.evidenceCount + ' / ' + ((review.skills.items || []).filter(function (i) { return String(i.name || '').trim(); }).length || 0)) +
+        (m.skillHours > 0 && m.evidenceCount === 0 ? '<span class="warn">⚠ 练习未沉淀：投入了时间但没有可展示证据</span>' : '');
+    }
+    var financeCalc = $('#calc-finance');
+    if (financeCalc) {
+      financeCalc.innerHTML =
+        ksItem('储蓄率', m.savingRate != null ? C.fmtPct(m.savingRate) : '—') +
+        ksItem('安全垫', m.runwayMonths != null ? m.runwayMonths.toFixed(1) + ' 个月' : '—') +
+        ksItem('负债合计', C.fmtMoney(m.debtBalance));
+    }
+    var sugIncome = $('#sug-income'); if (sugIncome) sugIncome.innerHTML = suggestionHtml('income', m.suggestions.income, review);
+    var sugSkills = $('#sug-skills'); if (sugSkills) sugSkills.innerHTML = suggestionHtml('skills', m.suggestions.skills, review);
+    var sugFinance = $('#sug-finance'); if (sugFinance) sugFinance.innerHTML = suggestionHtml('finance', m.suggestions.finance, review);
+    var sugRisk = $('#sug-risk'); if (sugRisk) sugRisk.innerHTML = suggestionHtml('risk', m.suggestions.risk, review);
+  }
+
+  function submitReview(review) {
+    var errors = C.validateReview(review);
+    var view = $('#view');
+    showErrors(view, errors);
+    markInvalid(view, errors);
+    if (errors.length) {
+      toast('还有 ' + errors.length + ' 处需要补全', 'error');
+      return;
+    }
+    review.status = 'done';
+    review.completedAt = nowISO();
+    review.updatedAt = nowISO();
+    // 快照底线状态
+    var rules = getRules();
+    review.bottomLine = {};
+    rules.forEach(function (r) { review.bottomLine[r.type] = r.status; });
+    persist();
+    toast('复盘已提交，底线状态已更新');
+    goto('#/reviews');
+  }
+
+  // ================================================================ 年度目标
+  function currentFy() { return C.currentQuarter(new Date(), state.data.settings.quarterStartMonth).fy; }
+
+  function renderGoals(view) {
+    var data = state.data;
+    var year = currentFy();
+    var active = C.activeGoals(data.goals, year);
+    var html = pageHead('年度目标', '每年只允许 1–2 个核心目标 · 当前 ' + year + ' 年',
+      '<button class="btn btn-primary" data-action="add-goal">新增目标</button>');
+
+    // 年中校准
+    var month = new Date().getMonth() + 1;
+    if (month >= 7 && month <= 9) {
+      var needCal = active.some(function (g) { return !g.midYearCheck; });
+      if (needCal) {
+        html += alertBlock('blue', '年中校准（7 月）', '目标需要一次三选一：继续 / 降级为维持 / 正式放弃。',
+          '<button class="btn btn-sm" data-action="midyear">开始校准</button>');
+      }
+    }
+    if (month >= 11 || month <= 2) {
+      html += alertBlock('muted', '年末结项', '给今年的目标打分并归档，形成年度快照。',
+        '<button class="btn btn-sm" data-action="yearend">开始结项</button>');
+    }
+    // 往年未结项目标
+    var olderYears = {};
+    data.goals.forEach(function (g) {
+      if ((g.status === 'active' || g.status === 'maintained') && g.year < year) olderYears[g.year] = true;
+    });
+    Object.keys(olderYears).forEach(function (y) {
+      html += alertBlock('yellow', y + ' 年目标未结项', '上一年度的目标需要结项或归档后才能保持一年 1–2 个目标的约束。',
+        '<button class="btn btn-sm" data-action="yearend-year" data-id="' + y + '">结项 ' + y + ' 年目标</button>');
+    });
+
+    // 进行中
+    html += '<div class="card"><div class="card-title"><h2>进行中（' + active.length + ' / 2）</h2>' +
+      '<span class="small muted">新增第 3 个前必须先归档一个</span></div>';
+    if (!active.length) {
+      html += '<div class="empty" style="padding:26px"><div class="empty-title">还没有今年的核心目标</div>' +
+        '<div class="small">一年只定 1–2 个。写不出可验证的完成标准，就还不能立项。</div>' +
+        '<button class="btn btn-primary mt-3" data-action="add-goal">开始立项</button></div>';
+    } else {
+      html += active.map(function (g) { return goalCardHtml(g, true); }).join('');
+    }
+    html += '</div>';
+
+    // 放弃清单
+    var dropped = data.goals.filter(function (g) { return g.status === 'dropped'; });
+    html += '<div class="card section-gap"><div class="card-title"><h2>放弃清单（' + dropped.length + '）</h2>' +
+      '<span class="small muted">主动放弃也是决策，记下来</span></div>';
+    if (!dropped.length) {
+      html += '<div class="small muted">还没有放弃的目标。</div>';
+    } else {
+      html += dropped.sort(function (a, b) { return (b.droppedAt || '') > (a.droppedAt || '') ? 1 : -1; }).map(function (g) {
+        return '<div style="padding:10px 0;border-bottom:1px solid var(--border)">' +
+          '<div class="flex-between"><div><span style="color:var(--faint);text-decoration:line-through">' + esc(g.title) + '</span>' +
+          '<span class="tiny faint" style="margin-left:8px">' + esc(g.year) + ' 年</span></div>' +
+          '<button class="btn btn-xs btn-ghost" data-action="restore-goal" data-id="' + g.id + '">恢复</button></div>' +
+          (g.dropReason ? '<div class="small muted" style="margin-top:2px">原因：' + esc(g.dropReason) + '</div>' : '') +
+          '</div>';
+      }).join('');
+    }
+    html += '</div>';
+
+    // 已达成
+    var achieved = data.goals.filter(function (g) { return g.status === 'achieved'; });
+    if (achieved.length) {
+      html += '<div class="card section-gap"><div class="card-title"><h2>已达成（' + achieved.length + '）</h2></div>' +
+        achieved.map(function (g) {
+          return '<div class="flex-between" style="padding:9px 0;border-bottom:1px solid var(--border)">' +
+            '<div>' + esc(g.title) + (g.yearEndScore != null ? ' <span class="small muted">自评 ' + g.yearEndScore + ' 分</span>' : '') + '</div>' +
+            '<button class="btn btn-xs btn-ghost" data-action="delete-goal" data-id="' + g.id + '">删除</button></div>';
+        }).join('') + '</div>';
+    }
+
+    // 历史年份
+    var older = data.goals.filter(function (g) { return g.year < year; });
+    if (older.length) {
+      html += '<div class="card section-gap"><div class="card-title"><h2>往年目标</h2></div>' +
+        older.sort(function (a, b) { return b.year - a.year; }).map(function (g) {
+          return '<div class="flex-between small" style="padding:7px 0;border-bottom:1px solid var(--border)">' +
+            '<span>' + esc(g.year) + ' · ' + esc(g.title) + '</span>' + enumBadge(C.ENUMS.goalStatus, g.status) + '</div>';
+        }).join('') + '</div>';
+    }
+
+    view.innerHTML = html;
+  }
+
+  function goalCardHtml(g, showActions) {
+    var prog = C.goalProgress(g);
+    var krs = (g.keyResults || []).filter(function (k) { return String(k.text || '').trim(); });
+    var html = '<div class="goal">' +
+      '<div class="goal-head"><div style="min-width:0">' +
+        '<div class="goal-title">' + esc(g.title) + '</div>' +
+        '<div class="goal-sub">截止 ' + esc(C.fmtDate(g.deadline)) + ' · 预算 ' + (g.budget && g.budget.hoursPerWeek ? g.budget.hoursPerWeek + ' h/周' : '—') +
+        ' · ' + (g.budget && g.budget.money ? C.fmtMoney(g.budget.money) : '—') + '</div>' +
+      '</div><div class="goal-actions">' + enumBadge(C.ENUMS.goalStatus, g.status) +
+      '<button class="btn btn-sm" data-action="update-kr" data-id="' + g.id + '">更新进度</button>' +
+      '<button class="btn btn-sm btn-ghost" data-action="edit-goal" data-id="' + g.id + '">编辑</button>' +
+      '<button class="btn btn-sm btn-ghost" data-action="goal-achieved" data-id="' + g.id + '">标记达成</button>' +
+      '<button class="btn btn-sm btn-ghost" data-action="goal-drop" data-id="' + g.id + '">放弃</button>' +
+      '</div></div>' +
+      '<div class="goal-def"><b>完成标准：</b>' + esc(g.definitionOfDone) + '</div>' +
+      (g.antiGoals ? '<div class="goal-def"><b>反目标：</b>' + esc(g.antiGoals) + '</div>' : '') +
+      (krs.length ? '<div class="kr-list">' + krs.map(function (k) {
+        var pct = C.n(k.target) > 0 ? C.clamp(C.n(k.current) / C.n(k.target), 0, 1) : 0;
+        return '<div class="kr"><div class="kr-text">' + esc(k.text) + '</div>' +
+          '<div class="kr-bar"><i style="width:' + pct * 100 + '%"></i></div>' +
+          '<div class="kr-num">' + C.fmtNum(C.n(k.current)) + ' / ' + C.fmtNum(C.n(k.target)) + '</div></div>';
+      }).join('') + '</div>' : '') +
+      (prog != null ? '<div class="small muted mt-2">整体进度 ' + Math.round(prog * 100) + '%</div>' : '') +
+      '</div>';
+    return html;
+  }
+
+  function openGoalEditor(existing, presetStatus) {
+    var year = currentFy();
+    var draft = existing ? JSON.parse(JSON.stringify(existing)) : {
+      id: C.uid('g'), year: year, title: '', definitionOfDone: '',
+      keyResults: [{ text: '', target: null, current: 0 }], deadline: year + '-12-31',
+      antiGoals: '', budget: { hoursPerWeek: null, money: null },
+      status: 'active', createdAt: nowISO(), updatedAt: nowISO()
+    };
+    var body = '<div class="hidden error-list" id="goal-errors"></div>' +
+      fieldWrap('目标名', textControl('title', draft.title, { placeholder: '一句话说清楚' }), { req: true }) +
+      fieldWrap('完成标准（必须可验证）', textareaControl('definitionOfDone', draft.definitionOfDone, { rows: 2, placeholder: '例如：连续 3 个月副业收入 ≥ 5000 元' }), { req: true }) +
+      fieldWrap('截止时间', dateControl('deadline', draft.deadline), { req: true }) +
+      '<div class="field"><label>关键结果（最多 3 条，每条带数字目标）</label>' +
+        '<div class="rows" id="goal-kr-rows"></div>' +
+        '<div class="mt-2"><button type="button" class="btn btn-sm" id="goal-add-kr">+ 添加关键结果</button></div>' +
+      '</div>' +
+      fieldWrap('反目标（为达成它，明确不做什么）', textControl('antiGoals', draft.antiGoals, { placeholder: '例如：不接与主业冲突的项目' })) +
+      '<div class="form-grid">' +
+      fieldWrap('时间预算（小时/周）', numControl('budget.hoursPerWeek', draft.budget.hoursPerWeek)) +
+      fieldWrap('金钱预算（元）', numControl('budget.money', draft.budget.money)) +
+      '</div>';
+    var ov = openModal({
+      title: existing ? '编辑目标' : '新增年度目标',
+      body: body,
+      wide: true,
+      footer: '<button type="button" class="btn" data-close>取消</button>' +
+        '<button type="button" class="btn btn-primary" id="goal-save">保存</button>',
+      onMount: function (o) {
+        var bodyEl = o.querySelector('.modal-body');
+        function renderKrs() {
+          var rows = o.querySelector('#goal-kr-rows');
+          rows.innerHTML = draft.keyResults.map(function (k, i) {
+            return '<div class="row-line" style="grid-template-columns:1fr 110px 110px auto">' +
+              '<input class="input kr-text" value="' + esc(k.text || '') + '" placeholder="关键结果">' +
+              '<input class="input kr-target" type="number" value="' + (k.target == null ? '' : esc(String(k.target))) + '" placeholder="目标数字" min="0">' +
+              '<input class="input kr-current" type="number" value="' + (k.current == null ? '' : esc(String(k.current))) + '" placeholder="当前进度" min="0">' +
+              '<button type="button" class="rm" data-rm-kr="' + i + '">×</button>' +
+              '</div>';
+          }).join('');
+        }
+        renderKrs();
+        o.querySelector('#goal-add-kr').addEventListener('click', function () {
+          if (draft.keyResults.length >= 3) { toast('关键结果最多 3 条', 'error'); return; }
+          draft.keyResults.push({ text: '', target: null, current: 0 });
+          renderKrs();
+        });
+        o.querySelector('#goal-kr-rows').addEventListener('click', function (e) {
+          var btn = e.target.closest('[data-rm-kr]');
+          if (!btn) return;
+          draft.keyResults.splice(parseInt(btn.dataset.rmKr, 10), 1);
+          renderKrs();
+        });
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#goal-save').addEventListener('click', function () {
+          readFields(bodyEl, draft);
+          draft.keyResults = $$('#goal-kr-rows .row-line', o).map(function (row) {
+            return {
+              text: row.querySelector('.kr-text').value.trim(),
+              target: C.nullableNum(row.querySelector('.kr-target').value),
+              current: C.nullableNum(row.querySelector('.kr-current').value) || 0
+            };
+          }).filter(function (k) { return k.text; });
+          var errors = C.validateGoal(draft);
+          showErrors(o, errors);
+          if (errors.length) { toast('目标信息不完整', 'error'); return; }
+          draft.updatedAt = nowISO();
+          if (existing) {
+            var idx = state.data.goals.findIndex(function (g) { return g.id === existing.id; });
+            if (idx >= 0) state.data.goals[idx] = draft;
+          } else {
+            draft.createdAt = nowISO();
+            state.data.goals.push(draft);
+          }
+          persist();
+          closeModal(o);
+          toast(existing ? '目标已更新' : '目标已立项');
+          render();
+        });
+      }
+    });
+    return ov;
+  }
+
+  function openGoalLimitModal() {
+    var year = currentFy();
+    var active = C.activeGoals(state.data.goals, year);
+    var body = '<p class="small muted" style="margin-bottom:14px">今年已锁定 2 个核心目标。要新增，必须先把其中一个移入放弃清单。</p>' +
+      active.map(function (g, i) {
+        return '<label class="flex-gap" style="display:flex;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin-bottom:8px;cursor:pointer">' +
+          '<input type="radio" name="drop-goal" value="' + g.id + '"' + (i === 0 ? ' checked' : '') + ' style="accent-color:var(--accent)">' +
+          '<span>' + esc(g.title) + '</span></label>';
+      }).join('') +
+      fieldWrap('放弃原因', textControl('reason', '', { placeholder: '写下为什么放弃，避免以后重复立项' }), { req: true });
+    openModal({
+      title: '需要先归档一个目标',
+      body: body,
+      footer: '<button type="button" class="btn" data-close>取消</button>' +
+        '<button type="button" class="btn btn-primary" id="limit-ok">归档并继续</button>',
+      onMount: function (o) {
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#limit-ok').addEventListener('click', function () {
+          var picked = o.querySelector('input[name="drop-goal"]:checked');
+          var reason = o.querySelector('[data-path="reason"]').value.trim();
+          if (!reason) { toast('请填写放弃原因', 'error'); return; }
+          var goal = state.data.goals.filter(function (g) { return g.id === picked.value; })[0];
+          goal.status = 'dropped';
+          goal.dropReason = reason;
+          goal.droppedAt = nowISO();
+          goal.updatedAt = nowISO();
+          persist();
+          closeModal(o);
+          toast('已归档，可以新增目标了');
+          openGoalEditor(null);
+        });
+      }
+    });
+  }
+
+  function openUpdateKrModal(goal) {
+    var krs = (goal.keyResults || []).map(function (k) { return { text: k.text, target: k.target, current: k.current }; });
+    var body = krs.map(function (k, i) {
+      return '<div class="field"><label>' + esc(k.text) + '（目标 ' + C.fmtNum(k.target) + '）</label>' +
+        '<input class="input" type="number" data-kr-index="' + i + '" value="' + (k.current == null ? '' : esc(String(k.current))) + '" min="0"></div>';
+    }).join('') || '<div class="small muted">这个目标还没有关键结果。</div>';
+    openModal({
+      title: '更新目标进度',
+      body: body,
+      footer: '<button type="button" class="btn" data-close>取消</button><button type="button" class="btn btn-primary" id="kr-ok">保存进度</button>',
+      onMount: function (o) {
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#kr-ok').addEventListener('click', function () {
+          $$('[data-kr-index]', o).forEach(function (input) {
+            var i = parseInt(input.dataset.krIndex, 10);
+            if (goal.keyResults[i]) goal.keyResults[i].current = C.nullableNum(input.value) || 0;
+          });
+          goal.updatedAt = nowISO();
+          persist();
+          closeModal(o);
+          toast('进度已更新');
+          render();
+        });
+      }
+    });
+  }
+
+  function openMidYearModal() {
+    var year = currentFy();
+    var active = C.activeGoals(state.data.goals, year);
+    var body = active.map(function (g) {
+      return '<div style="padding:12px 0;border-bottom:1px solid var(--border)">' +
+        '<div style="font-weight:600;margin-bottom:8px">' + esc(g.title) + '</div>' +
+        radiosControl('mid_' + g.id, '', C.ENUMS.midYear) +
+        '</div>';
+    }).join('');
+    openModal({
+      title: '年中校准（7 月）',
+      body: body + '<div class="hint mt-3">降级 = 目标仍存在但不作为核心优先级；放弃 = 正式写入放弃清单，需写原因（可在下一步补充）。</div>',
+      footer: '<button type="button" class="btn" data-close>取消</button><button type="button" class="btn btn-primary" id="mid-ok">提交校准</button>',
+      onMount: function (o) {
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#mid-ok').addEventListener('click', function () {
+          active.forEach(function (g) {
+            var radios = o.querySelectorAll('input[data-path="mid_' + g.id + '"]');
+            var val = '';
+            Array.prototype.forEach.call(radios, function (r) { if (r.checked) val = r.value; });
+            if (!val) { val = 'continue'; }
+            g.midYearCheck = { decision: val, at: C.todayISO() };
+            if (val === 'maintain') g.status = 'maintained';
+            if (val === 'drop') { g.status = 'dropped'; g.dropReason = g.dropReason || '年中校准放弃'; g.droppedAt = C.todayISO(); }
+            g.updatedAt = nowISO();
+          });
+          persist();
+          closeModal(o);
+          toast('年中校准已记录');
+          render();
+        });
+      }
+    });
+  }
+
+  function openYearEndModal(yearOpt) {
+    var year = yearOpt || currentFy();
+    var goals = C.activeGoals(state.data.goals, year).concat(state.data.goals.filter(function (g) { return g.year === year && g.status === 'achieved'; }));
+    if (!goals.length) { toast('没有需要结项的目标', 'error'); return; }
+    var body = goals.map(function (g) {
+      return '<div style="padding:12px 0;border-bottom:1px solid var(--border)">' +
+        '<div style="font-weight:600">' + esc(g.title) + '</div>' +
+        '<div class="form-grid mt-2">' +
+        '<div class="field"><label>自评分数（0–100）</label><input class="input" type="number" data-score="' + g.id + '" min="0" max="100" value="' + (g.yearEndScore == null ? '' : g.yearEndScore) + '"></div>' +
+        '<div class="field"><label>最终状态</label><select class="input" data-status="' + g.id + '">' +
+          ['active', 'achieved', 'dropped'].map(function (s) {
+            return '<option value="' + s + '"' + (g.status === s ? ' selected' : '') + '>' + esc(C.enumLabel(C.ENUMS.goalStatus, s)) + '</option>';
+          }).join('') + '</select></div>' +
+        '</div>' +
+        '<div class="field"><label>一句话归因</label><input class="input" data-note="' + g.id + '" value="' + esc(g.yearEndNote || '') + '" placeholder="为什么达成 / 为什么没达成"></div>' +
+        '</div>';
+    }).join('');
+    openModal({
+      title: year + ' 年末结项',
+      body: body,
+      wide: true,
+      footer: '<button type="button" class="btn" data-close>取消</button><button type="button" class="btn btn-primary" id="ye-ok">提交结项</button>',
+      onMount: function (o) {
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#ye-ok').addEventListener('click', function () {
+          goals.forEach(function (g) {
+            var scoreEl = o.querySelector('[data-score="' + g.id + '"]');
+            var statusEl = o.querySelector('[data-status="' + g.id + '"]');
+            var noteEl = o.querySelector('[data-note="' + g.id + '"]');
+            g.yearEndScore = C.nullableNum(scoreEl.value);
+            g.yearEndNote = noteEl.value.trim();
+            g.status = statusEl.value;
+            if (g.status === 'achieved') g.achievedAt = g.achievedAt || C.todayISO();
+            g.updatedAt = nowISO();
+          });
+          persist();
+          closeModal(o);
+          toast('年末结项已保存');
+          render();
+        });
+      }
+    });
+  }
+
+  // ================================================================ 底线
+  function getRawRule(ruleId) { return (state.data.bottomLines || []).filter(function (r) { return r.id === ruleId; })[0] || null; }
+
+  function renderBottom(view) {
+    var rules = getRules();
+    var html = pageHead('底线', '预先写好退出条件，避免在情绪和沉没成本里做决定');
+    html += '<div class="card"><div class="card-title"><h2>底线规则</h2><span class="small muted">季度复盘时自动计算状态</span></div>' +
+      rules.map(function (r) { return ruleCardHtml(r); }).join('') + '</div>';
+    html += '<div class="card section-gap"><div class="card-title"><h2>这套规则怎么用</h2></div>' +
+      '<div class="small muted" style="line-height:1.9">' +
+      '1. 绿色 = 未触达；黄色 = 接近阈值；红色 = 触达。<br>' +
+      '2. 红色不是让你立刻辞职，而是必须填一张决策卡：设定期限观望 / 启动准备 / 执行退出。<br>' +
+      '3. 决策卡提交后状态不再反复摇摆；到复查日期再评估。<br>' +
+      '4. 阈值可以按你的实际情况调整，改完立即按已有复盘数据重新计算。</div></div>';
+    view.innerHTML = html;
+  }
+
+  function handleRuleThresholdChange(e) {
+    var el = e.target.closest('[data-rule-field]');
+    if (!el) return;
+    var rule = getRawRule(el.dataset.ruleId);
+    if (!rule) return;
+    var val = C.nullableNum(el.value);
+    if (val == null) return;
+    rule.threshold[el.dataset.ruleField] = val;
+    persist();
+    toast('阈值已更新，状态已重算');
+    render();
+  }
+
+  function ruleCardHtml(rule) {
+    var meta = C.RULE_META[rule.type] || { title: rule.title, desc: '', fields: [] };
+    var raw = getRawRule(rule.ruleId);
+    var flags = rule.flags || [];
+    var html = '<div class="rule">' +
+      '<div class="rule-head"><div><div class="rule-title">' + esc(meta.title) + '</div>' +
+      '<div class="rule-desc">' + esc(meta.desc) + '</div></div>' +
+      '<div class="rule-actions">' + ruleBadge(rule.status) +
+      (rule.status === 'red' && !rule.decision ? '<button class="btn btn-sm btn-primary" data-action="open-decision" data-id="' + rule.ruleId + '">填写决策卡</button>' : '') +
+      (rule.status === 'red' && rule.decision ? '<button class="btn btn-sm btn-ghost" data-action="review-decision" data-id="' + rule.ruleId + '">标记已复查</button>' : '') +
+      '</div></div>' +
+      '<div class="rule-threshold">' + (meta.fields || []).map(function (f) {
+        return '<span class="th-field"><span>' + esc(f.label) + '</span>' +
+          '<input class="input" type="number" data-rule-id="' + raw.id + '" data-rule-field="' + f.key + '"' +
+          ' value="' + (raw.threshold[f.key] == null ? '' : raw.threshold[f.key]) + '"' +
+          (f.min != null ? ' min="' + f.min + '"' : '') + (f.max != null ? ' max="' + f.max + '"' : '') +
+          (f.step ? ' step="' + f.step + '"' : '') + '>' +
+          '<span class="faint">' + esc(f.suffix || '') + '</span></span>';
+      }).join('') + '</div>' +
+      (flags.length ? '<div class="rule-evidence">' + flags.map(function (f) {
+        var cls = f.bad === true ? 'red' : f.bad === false ? 'green' : 'yellow';
+        return '<div class="flag ' + cls + '">' + esc(f.detail) + '</div>';
+      }).join('') + '</div>' : '') +
+      (rule.decision ? decisionHtml(rule) : '') +
+      '</div>';
+    return html;
+  }
+
+  function decisionHtml(rule) {
+    var d = rule.decision;
+    var overdue = rule.decisionOverdue;
+    return '<div class="decision' + (overdue ? ' overdue' : '') + '">' +
+      '<div><b>' + esc(C.enumLabel(C.ENUMS.decisionChoice, d.choice)) + '</b>' +
+      (overdue ? ' <span class="badge tone-yellow">已过复查日期</span>' : '') + '</div>' +
+      '<div class="d-line">理由：' + esc(d.reason) + '</div>' +
+      '<div class="d-line">决策时间：' + esc(C.fmtDate(d.createdAt)) + ' · 截止/复查：<b>' + esc(C.fmtDate(d.deadline)) + '</b></div>' +
+      '</div>';
+  }
+
+  function openDecisionCard(ruleId) {
+    var rule = getRawRule(ruleId);
+    var computed = getRules().filter(function (r) { return r.ruleId === ruleId; })[0];
+    if (!rule || !computed) return;
+    var meta = C.RULE_META[rule.type] || { title: rule.title };
+    var draft = { choice: '', reason: '', deadline: C.isoDate(new Date(Date.now() + 60 * 86400000)) };
+    var evidence = (computed.flags || []).filter(function (f) { return f.bad !== false; }).slice(-3);
+    var body = '<div class="alert alert-red" style="margin-bottom:16px"><div class="alert-main">' +
+      '<div class="alert-title">' + esc(meta.title) + ' 已触发</div>' +
+      '<div class="alert-desc">' + evidence.map(function (f) { return esc(f.detail); }).join('<br>') + '</div></div></div>' +
+      fieldWrap('你的选择', radiosControl('choice', '', C.ENUMS.decisionChoice), { req: true }) +
+      fieldWrap('理由（写给自己看）', textareaControl('reason', '', { rows: 3, placeholder: '为什么选这个？约束条件是什么？' }), { req: true }) +
+      fieldWrap('截止 / 复查日期', dateControl('deadline', draft.deadline), { req: true }) +
+      '<div class="hint">提交后状态记录为「已决策」，到复查日期前不再反复摇摆。</div>';
+    openModal({
+      title: '底线决策卡',
+      body: body,
+      wide: true,
+      footer: '<button type="button" class="btn" data-close>取消</button>' +
+        '<button type="button" class="btn btn-primary" id="decision-ok">提交决策</button>',
+      onMount: function (o) {
+        var bodyEl = o.querySelector('.modal-body');
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#decision-ok').addEventListener('click', function () {
+          readFields(bodyEl, draft);
+          if (!draft.choice) { toast('请选择一个方案', 'error'); return; }
+          if (!draft.reason || draft.reason.length < 4) { toast('请写清楚理由（至少 4 个字）', 'error'); return; }
+          if (!draft.deadline) { toast('请设定截止/复查日期', 'error'); return; }
+          rule.decisions = rule.decisions || [];
+          rule.decisions.push({
+            id: C.uid('dec'), choice: draft.choice, reason: draft.reason,
+            deadline: draft.deadline, createdAt: nowISO(), reviewedAt: null
+          });
+          persist();
+          closeModal(o);
+          toast('决策已记录。到 ' + C.fmtDate(draft.deadline) + ' 复查。');
+          render();
+        });
+      }
+    });
+  }
+
+  // ================================================================ 赛道雷达
+  function renderRadar(view) {
+    var items = state.data.watchItems || [];
+    var html = pageHead('赛道雷达', '持续收集信息，等增量出现，而不是硬挤拥挤赛道',
+      '<button class="btn btn-primary" data-action="add-radar">新增观察</button>');
+
+    var counts = {
+      observing: items.filter(function (w) { return w.status === 'observing'; }).length,
+      researching: items.filter(function (w) { return w.status === 'researching'; }).length,
+      entered: items.filter(function (w) { return w.status === 'entered'; }).length,
+      dropped: items.filter(function (w) { return w.status === 'dropped'; }).length
+    };
+    html += '<div class="grid grid-4">' +
+      '<div class="card"><div class="stat-label">观察中</div><div class="stat-value">' + counts.observing + '</div><div class="stat-sub">待 ≥30 天才能升级</div></div>' +
+      '<div class="card"><div class="stat-label">研究中</div><div class="stat-value">' + counts.researching + '</div><div class="stat-sub">正在验证信号</div></div>' +
+      '<div class="card"><div class="stat-label">已进入</div><div class="stat-value">' + counts.entered + '</div><div class="stat-sub">已投入资源</div></div>' +
+      '<div class="card"><div class="stat-label">已放弃</div><div class="stat-value">' + counts.dropped + '</div><div class="stat-sub">记录放弃原因同样重要</div></div>' +
+    '</div>';
+
+    html += '<div class="card section-gap"><div class="card-title"><h2>观察清单</h2>' +
+      '<div class="card-actions"><button class="btn btn-sm btn-ghost" data-action="radar-filter" data-id="all">全部 ' + items.length + '</button>' +
+      ['observing', 'researching', 'entered', 'dropped'].map(function (s) {
+        return '<button class="btn btn-sm ' + (state.radarFilter === s ? 'btn-primary' : 'btn-ghost') + '" data-action="radar-filter" data-id="' + s + '">' +
+          C.enumLabel(C.ENUMS.watchStatus, s) + ' ' + counts[s] + '</button>';
+      }).join('') + '</div></div>';
+
+    var filtered = state.radarFilter === 'all' ? items : items.filter(function (w) { return w.status === state.radarFilter; });
+    filtered.sort(function (a, b) { return (a.status === 'dropped' ? 1 : 0) - (b.status === 'dropped' ? 1 : 0) || (b.updatedAt || '') > (a.updatedAt || '') ? 1 : -1; });
+    if (!filtered.length) {
+      html += '<div class="empty" style="padding:30px"><div class="empty-title">' + (items.length ? '这个状态下没有条目' : '雷达里还没有东西') + '</div>' +
+        '<div class="small">看到感兴趣的方向，先记一条「观察中」，写清你看到的信号。</div>' +
+        '<button class="btn btn-primary mt-3" data-action="add-radar">记录第一条观察</button></div>';
+    } else {
+      filtered.forEach(function (w) { html += radarItemHtml(w); });
+    }
+    html += '</div>';
+    view.innerHTML = html;
+  }
+
+  function radarItemHtml(w) {
+    var due = w.nextReviewAt && w.nextReviewAt <= C.todayISO();
+    var days = C.observationDays(w);
+    var canUpgrade = C.canWatchTransition(w, 'researching').ok;
+    return '<div class="radar-item">' +
+      '<div class="radar-head"><span class="radar-name">' + esc(w.name) + '</span>' +
+        enumBadge(C.ENUMS.watchStatus, w.status) +
+        '<span class="tiny faint">拥挤度 ' + C.fmtNum(w.crowdedness) + '/5 · 已观察 ' + days + ' 天</span>' +
+        '<div class="radar-actions">' +
+          '<button class="btn btn-xs" data-action="status-radar" data-id="' + w.id + '">状态流转</button>' +
+          '<button class="btn btn-xs btn-ghost" data-action="edit-radar" data-id="' + w.id + '">编辑</button>' +
+          '<button class="btn btn-xs btn-ghost" data-action="delete-radar" data-id="' + w.id + '">删除</button>' +
+        '</div></div>' +
+      '<div class="radar-grid">' +
+        '<div><span class="k">信号</span>' + (w.signals && w.signals.length
+          ? '<ul class="radar-signals">' + w.signals.map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ul>'
+          : '<span class="v">—</span>') + '</div>' +
+        '<div><span class="k">能力交集</span><span class="v">' + esc(w.skillOverlap || '—') + '</span></div>' +
+        '<div><span class="k">研究触发条件</span><span class="v">' + esc(w.researchTrigger || '—') + '</span></div>' +
+        (w.sources && w.sources.length ? '<div><span class="k">来源</span><span class="v">' + w.sources.map(function (s) {
+          return '<a href="' + esc(s) + '" target="_blank" rel="noopener">' + esc(s.replace(/^https?:\/\//, '').slice(0, 42)) + '</a>';
+        }).join('、') + '</span></div>' : '') +
+      '</div>' +
+      '<div class="radar-meta">' +
+        (w.nextReviewAt ? '<span class="' + (due ? 'due' : '') + '">下次回看 ' + esc(C.fmtDate(w.nextReviewAt)) + (due ? '（已到期）' : '') + '</span>' : '') +
+        (w.status === 'observing' && !canUpgrade ? '<span>观察满 30 天才能升级（还差 ' + C.canWatchTransition(w, 'researching').daysLeft + ' 天）</span>' : '') +
+        (w.notes ? '<span>备注：' + esc(w.notes) + '</span>' : '') +
+      '</div>' +
+      '</div>';
+  }
+
+  function openRadarEditor(existing) {
+    var draft = existing ? JSON.parse(JSON.stringify(existing)) : {
+      id: C.uid('w'), name: '', sources: [], signals: [], skillOverlap: '',
+      crowdedness: 3, status: 'observing', researchTrigger: '',
+      observationStartedAt: C.todayISO(), nextReviewAt: C.isoDate(new Date(Date.now() + 30 * 86400000)),
+      notes: '', statusHistory: [], createdAt: nowISO(), updatedAt: nowISO()
+    };
+    var body = '<div class="hidden error-list" id="radar-errors"></div>' +
+      fieldWrap('赛道 / 方向名', textControl('name', draft.name, { placeholder: '一句话' }), { req: true }) +
+      fieldWrap('看到的信号（每行一条，至少 2 条）', textareaControl('signals_text', (draft.signals || []).join('\n'), { rows: 3, placeholder: '事实，不是感觉' }), { req: true }) +
+      fieldWrap('与我能力的交集 / 缺口', textareaControl('skillOverlap', draft.skillOverlap, { rows: 2 })) +
+      '<div class="form-grid">' +
+      fieldWrap('拥挤度（1–5，越高越挤）', numControl('crowdedness', draft.crowdedness)) +
+      fieldWrap('下次回看日期', dateControl('nextReviewAt', draft.nextReviewAt)) +
+      '</div>' +
+      fieldWrap('进入研究的触发条件', textControl('researchTrigger', draft.researchTrigger, { placeholder: '例如：出现 3 个以上非巨头玩家融资' })) +
+      fieldWrap('来源链接（每行一条）', textareaControl('sources_text', (draft.sources || []).join('\n'), { rows: 2 })) +
+      fieldWrap('备注', textareaControl('notes', draft.notes, { rows: 2 }));
+    openModal({
+      title: existing ? '编辑观察条目' : '新增观察条目',
+      body: body,
+      wide: true,
+      footer: '<button type="button" class="btn" data-close>取消</button>' +
+        '<button type="button" class="btn btn-primary" id="radar-save">保存</button>',
+      onMount: function (o) {
+        var bodyEl = o.querySelector('.modal-body');
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#radar-save').addEventListener('click', function () {
+          readFields(bodyEl, draft);
+          draft.signals = String(draft.signals_text || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+          draft.sources = String(draft.sources_text || '').split('\n').map(function (s) { return s.trim(); }).filter(Boolean);
+          delete draft.signals_text; delete draft.sources_text;
+          var errors = C.validateWatchItem(draft);
+          showErrors(o, errors);
+          if (errors.length) { toast('观察条目信息不完整', 'error'); return; }
+          draft.updatedAt = nowISO();
+          if (existing) {
+            var idx = state.data.watchItems.findIndex(function (w) { return w.id === existing.id; });
+            if (idx >= 0) state.data.watchItems[idx] = draft;
+          } else {
+            state.data.watchItems.push(draft);
+          }
+          persist();
+          closeModal(o);
+          toast(existing ? '观察条目已更新' : '已加入观察清单，30 天后才能升级');
+          render();
+        });
+      }
+    });
+  }
+
+  function openStatusModal(watchId) {
+    var item = state.data.watchItems.filter(function (w) { return w.id === watchId; })[0];
+    if (!item) return;
+    var options = C.ENUMS.watchStatus.filter(function (s) { return s.value !== item.status; });
+    var body = '<div class="small muted mb-3">当前状态：' + esc(C.enumLabel(C.ENUMS.watchStatus, item.status)) +
+      ' · 已观察 ' + C.observationDays(item) + ' 天</div>' +
+      fieldWrap('变更到', radiosControl('status', '', options), { req: true }) +
+      (item.status === 'observing'
+        ? '<div class="hint mb-3">规则：观察期内（满 30 天前）不能升级为「研究中 / 已进入」，防止 FOMO 决策；放弃不受限制。</div>'
+        : '') +
+      fieldWrap('变更理由（可选）', textControl('note', '', { placeholder: '为什么现在改状态' }));
+    var draft = { status: '', note: '' };
+    openModal({
+      title: '状态流转',
+      body: body,
+      footer: '<button type="button" class="btn" data-close>取消</button>' +
+        '<button type="button" class="btn btn-primary" id="status-ok">确认变更</button>',
+      onMount: function (o) {
+        var bodyEl = o.querySelector('.modal-body');
+        o.querySelector('[data-close]').addEventListener('click', function () { closeModal(o); });
+        o.querySelector('#status-ok').addEventListener('click', function () {
+          readFields(bodyEl, draft);
+          if (!draft.status) { toast('请选择目标状态', 'error'); return; }
+          var check = C.canWatchTransition(item, draft.status);
+          if (!check.ok) {
+            toast('观察期未满，还差 ' + check.daysLeft + ' 天才能升级', 'error');
+            return;
+          }
+          item.statusHistory = item.statusHistory || [];
+          item.statusHistory.push({ from: item.status, to: draft.status, at: nowISO(), note: draft.note || '' });
+          item.status = draft.status;
+          item.updatedAt = nowISO();
+          if (draft.status === 'researching' || draft.status === 'entered') {
+            item.statusSince = C.todayISO();
+          }
+          persist();
+          closeModal(o);
+          toast('状态已更新');
+          render();
+        });
+      }
+    });
+  }
+
+  // ================================================================ 设置
+  function renderSettings(view) {
+    var data = state.data;
+    var backupDays = C.backupDays(data);
+    var html = pageHead('设置与备份', '数据只保存在这台电脑的浏览器里，请定期导出备份');
+
+    html += '<div class="card"><div class="card-title"><h2>基础设置</h2></div>' +
+      '<div class="form-grid">' +
+      fieldWrap('市场同岗位月薪中位数', numControl('settings.marketMedianSalary', data.settings.marketMedianSalary), { hint: '新建复盘时会自动带出' }) +
+      fieldWrap('每周信息定投目标（分钟）', numControl('settings.weeklyInputGoalMinutes', data.settings.weeklyInputGoalMinutes)) +
+      '</div>' +
+      '<button class="btn btn-primary" data-action="save-settings">保存设置</button></div>';
+
+    html += '<div class="card section-gap"><div class="card-title"><h2>数据与备份</h2></div>' +
+      '<div class="small muted mb-3">上次导出：' + (data.lastExportAt ? esc(C.fmtDate(data.lastExportAt)) + '（' + backupDays + ' 天前）' : '从未导出') +
+      ' · 建议每季度复盘完成后导出一次。</div>' +
+      '<div class="flex-gap">' +
+        '<button class="btn btn-primary" data-action="export-data">导出 JSON 备份</button>' +
+        '<button class="btn" data-action="import-data">导入备份</button>' +
+        '<input type="file" id="import-file" accept="application/json,.json" class="hidden">' +
+      '</div>' +
+      '<div class="hint mt-3">导入会覆盖当前全部数据，操作前建议先导出一次。</div></div>';
+
+    html += '<div class="card section-gap"><div class="card-title"><h2>危险操作</h2></div>' +
+      '<div class="small muted mb-3">重置会清空全部复盘、目标、底线决策和观察记录，且无法撤销。</div>' +
+      '<button class="btn btn-danger" data-action="reset-data">清空所有数据</button></div>';
+
+    html += '<div class="card section-gap"><div class="card-title"><h2>关于</h2></div>' +
+      '<div class="small muted" style="line-height:1.9">' +
+      '前途 v1.0 MVP · 数据格式 v' + C.SCHEMA_VERSION + '<br>' +
+      '存储位置：本机浏览器 localStorage（键名 <span class="kbd">' + esc(C.STORE_KEY) + '</span>）<br>' +
+      '无账号、无联网、无云端。换电脑或换浏览器请用 JSON 备份迁移。<br>' +
+      '设计原则：结论先行 · 数字优先 · 少而硬 · 可回溯。</div></div>';
+
+    view.innerHTML = html;
+
+    var fileInput = $('#import-file');
+    fileInput.addEventListener('change', function () {
+      var file = fileInput.files && fileInput.files[0];
+      if (!file) return;
+      var reader = new FileReader();
+      reader.onload = function () {
+        try {
+          var imported = C.importJSON(String(reader.result));
+          confirmAction({
+            title: '确认导入',
+            message: '导入后当前数据会被覆盖：' + imported.reviews.length + ' 份复盘、' + imported.goals.length + ' 个目标、' + imported.watchItems.length + ' 条观察。',
+            okLabel: '覆盖导入',
+            danger: true,
+            onOk: function () {
+              state.data = imported;
+              persist();
+              toast('备份已导入');
+              render();
+            }
+          });
+        } catch (e) {
+          toast('导入失败：' + e.message, 'error');
+        }
+      };
+      reader.readAsText(file);
+      fileInput.value = '';
+    });
+  }
+
+  // ================================================================ 全局动作分发
+  var ACTIONS = {
+    'new-review': function () { openQuarterPicker(); },
+    'back-reviews': function () { goto('#/reviews'); },
+    'delete-review': function (el) {
+      var review = getReview(el.dataset.id);
+      if (!review) return;
+      confirmAction({
+        title: '删除复盘', message: '确定删除 ' + review.quarter + ' 的复盘吗？底线状态会重新计算。',
+        okLabel: '删除', danger: true,
+        onOk: function () {
+          state.data.reviews = state.data.reviews.filter(function (r) { return r.id !== review.id; });
+          persist();
+          toast('复盘已删除');
+          goto('#/reviews');
+        }
+      });
+    },
+    'toggle-compare': function () { state.showCompare = !state.showCompare; render(); },
+    'add-goal': function () {
+      if (C.activeGoals(state.data.goals, currentFy()).length >= 2) openGoalLimitModal();
+      else openGoalEditor(null);
+    },
+    'edit-goal': function (el) { openGoalEditor(findGoal(el.dataset.id)); },
+    'update-kr': function (el) { var g = findGoal(el.dataset.id); if (g) openUpdateKrModal(g); },
+    'goal-achieved': function (el) {
+      var g = findGoal(el.dataset.id); if (!g) return;
+      confirmAction({
+        title: '标记达成', message: '「' + g.title + '」标记为已达成？', okLabel: '确认达成',
+        onOk: function () { g.status = 'achieved'; g.achievedAt = C.todayISO(); g.updatedAt = nowISO(); persist(); toast('已标记达成'); render(); }
+      });
+    },
+    'goal-drop': function (el) {
+      var g = findGoal(el.dataset.id); if (!g) return;
+      confirmAction({
+        title: '放弃目标', message: '放弃「' + g.title + '」会写入放弃清单，需要记录原因。',
+        inputLabel: '放弃原因', inputPlaceholder: '例如：与核心目标冲突，主动收缩', okLabel: '确认放弃', danger: true,
+        onOk: function (reason) {
+          g.status = 'dropped'; g.dropReason = reason; g.droppedAt = C.todayISO(); g.updatedAt = nowISO();
+          persist(); toast('已加入放弃清单'); render();
+        }
+      });
+    },
+    'restore-goal': function (el) {
+      var g = findGoal(el.dataset.id); if (!g) return;
+      if (C.activeGoals(state.data.goals, currentFy()).length >= 2) { toast('最多只能有 2 个进行中目标，请先归档其他目标', 'error'); return; }
+      g.status = 'active'; g.dropReason = ''; g.updatedAt = nowISO(); persist(); toast('目标已恢复'); render();
+    },
+    'delete-goal': function (el) {
+      var g = findGoal(el.dataset.id); if (!g) return;
+      confirmAction({
+        title: '删除目标', message: '删除后无法恢复，确定吗？', okLabel: '删除', danger: true,
+        onOk: function () {
+          state.data.goals = state.data.goals.filter(function (x) { return x.id !== g.id; });
+          persist(); toast('已删除'); render();
+        }
+      });
+    },
+    'midyear': function () { openMidYearModal(); },
+    'yearend': function () { openYearEndModal(); },
+    'yearend-year': function (el) { openYearEndModal(parseInt(el.dataset.id, 10)); },
+    'open-decision': function (el) { openDecisionCard(el.dataset.id); },
+    'review-decision': function (el) {
+      var rule = getRawRule(el.dataset.id); if (!rule) return;
+      var d = C.currentDecision(rule);
+      if (!d) return;
+      confirmAction({
+        title: '标记已复查', message: '确认已按决策执行并复查？此操作会归档当前决策；若规则仍为红色，需要重新填写决策卡。',
+        okLabel: '确认复查',
+        onOk: function () { d.reviewedAt = nowISO(); persist(); toast('决策已归档'); render(); }
+      });
+    },
+    'add-radar': function () { openRadarEditor(null); },
+    'edit-radar': function (el) { var w = findWatch(el.dataset.id); if (w) openRadarEditor(w); },
+    'status-radar': function (el) { openStatusModal(el.dataset.id); },
+    'delete-radar': function (el) {
+      var w = findWatch(el.dataset.id); if (!w) return;
+      confirmAction({
+        title: '删除观察条目', message: '确定删除「' + w.name + '」吗？', okLabel: '删除', danger: true,
+        onOk: function () {
+          state.data.watchItems = state.data.watchItems.filter(function (x) { return x.id !== w.id; });
+          persist(); toast('已删除'); render();
+        }
+      });
+    },
+    'radar-filter': function (el) { state.radarFilter = el.dataset.id; render(); },
+    'save-settings': function () {
+      var view = $('#view');
+      var data = state.data;
+      var market = view.querySelector('[data-path="settings.marketMedianSalary"]');
+      var week = view.querySelector('[data-path="settings.weeklyInputGoalMinutes"]');
+      data.settings.marketMedianSalary = C.nullableNum(market.value);
+      data.settings.weeklyInputGoalMinutes = C.nullableNum(week.value);
+      persist(); toast('设置已保存'); render();
+    },
+    'export-data': function () { exportData(); },
+    'import-data': function () { var f = $('#import-file'); if (f) f.click(); },
+    'reset-data': function () {
+      confirmAction({
+        title: '清空所有数据', message: '这会删除全部内容且无法恢复。建议先导出备份。', okLabel: '确认清空', danger: true,
+        inputLabel: '输入「重置」以确认', inputPlaceholder: '重置', inputRequired: '请按要求输入「重置」',
+        onOk: function (val) {
+          if (val !== '重置') { toast('输入不正确，未执行', 'error'); return; }
+          state.data = C.defaultData(new Date());
+          persist(); toast('数据已清空'); goto('#/home');
+        }
+      });
+    },
+    'log-input': function () {
+      state.data.inputLog = state.data.inputLog || [];
+      state.data.inputLog.push({ date: C.todayISO(), minutes: 30 });
+      persist(); toast('已记录 30 分钟信息输入'); render();
+    },
+    'btn': function (el) { if (el.dataset.href) goto(el.dataset.href); }
+  };
+
+  function findGoal(id) { return state.data.goals.filter(function (g) { return g.id === id; })[0] || null; }
+  function findWatch(id) { return state.data.watchItems.filter(function (w) { return w.id === id; })[0] || null; }
+
+  function exportData() {
+    var text = C.exportJSON(state.data);
+    var blob = new Blob([text], { type: 'application/json' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a');
+    a.href = url;
+    a.download = '前途备份-' + C.todayISO() + '.json';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(function () { URL.revokeObjectURL(url); }, 1000);
+    state.data.lastExportAt = C.todayISO();
+    persist();
+    toast('备份已导出');
+    if (state.route === 'settings') render();
+  }
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('[data-action]');
+    if (!el) return;
+    var fn = ACTIONS[el.dataset.action];
+    if (!fn) return;
+    e.preventDefault();
+    try { fn(el, e); } catch (err) { console.error(err); toast('操作失败：' + err.message, 'error'); }
+  });
+
+  // ================================================================ 启动
+  function init() {
+    state.demo = /(\?|&)demo=1/.test(location.search);
+    var stored = state.demo ? null : C.loadData();
+    if (stored) {
+      state.data = stored;
+    } else if (state.demo) {
+      state.data = C.buildDemoData(new Date());
+      var tag = $('#demo-tag');
+      if (tag) tag.classList.remove('hidden');
+    } else {
+      state.data = C.defaultData(new Date());
+      C.saveData(state.data);
+    }
+
+    // 事件委托只绑定一次（#view 元素本身不会被替换）
+    var viewEl = $('#view');
+    viewEl.addEventListener('input', function (e) {
+      if (state.route === 'review') onReviewInput(e);
+    });
+    viewEl.addEventListener('change', function (e) {
+      if (state.route === 'review') onReviewInput(e);
+      else if (state.route === 'bottom') handleRuleThresholdChange(e);
+    });
+    viewEl.addEventListener('click', function (e) {
+      if (state.route === 'review') onReviewClick(e);
+    });
+
+    if (!location.hash) {
+      location.hash = '#/home';
+    } else {
+      render();
+    }
+    window.__qiantuBooted = true;
+    window.addEventListener('beforeunload', function () {
+      if (!state.demo && state.saveTimer) C.saveData(state.data);
+    });
+  }
+
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
+  else init();
+})();
+
+</script>
+</body>
+</html>
